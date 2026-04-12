@@ -37,28 +37,28 @@ The following visualisations highlight key patterns observed during exploratory 
 **Price-to-Cost Ratio Distribution**
 The distribution of the price-to-cost ratio shows significant variation across claims, with a right-skewed pattern indicating that a subset of claims have disproportionately high repair costs relative to vehicle value. This feature serves as a key indicator of potential anomalies.
 
-![Ratio Distribution](outputs/figures/ratio_distribution.png)
+![Ratio Distribution](Outputs/figures/ratio_distribution.png)
 
 ---
 
 **Cost per Repair Hour Distribution**
 The cost per repair hour reveals variability in labour intensity, with some claims exhibiting unusually high costs that may indicate inefficiencies or suspicious activity.
 
-![Cost per Hour](outputs/figures/cost_per_hour.png)
+![Cost per Hour](Outputs/Figures/cost_per_hour.png)
 
 ---
 
 **Repair Lag Distribution**
 The time between breakdown and repair highlights operational patterns, where delays may reflect differences in claim complexity or processing behaviour.
 
-![Repair Lag](outputs/figures/repair_lag.png)
+![Repair Lag](Outputs/Figures/repair_lag.png)
 
 ---
 
 **Feature Correlation Matrix**
 The correlation matrix illustrates relationships between key variables used in clustering. Low to moderate correlations suggest that the selected features provide complementary information, supporting their use in segmentation.
 
-![Correlation](outputs/figures/correlation.png)
+![Correlation](outputs/Figures/correlation.png)
 
 ---
 
@@ -96,7 +96,7 @@ The optimal number of clusters was identified using the **Elbow Method**, which 
 
 As the number of clusters increases, the model’s inertia decreases, but with diminishing returns. The “elbow point” represents a balance between model complexity and explanatory power.
 
-![Elbow Plot](outputs/figures/elbow.png)
+![Elbow Plot](Outputs/Figures/elbow.png)
 
 The plot shows a clear inflection point around **k = 6**, beyond which the reduction in inertia becomes marginal.
 The inertia decreases steeply from K=2 to K=5, after which the rate of reduction slows noticeably. 
@@ -136,7 +136,7 @@ The clustering model segments insurance claims into six distinct groups, each re
 
 ### 📊 Cluster Profiles
 
-![Cluster Profiles](outputs/figures/cluster_profiles.png)
+![Cluster Profiles](Outputs/Figures/cluster_profiles.png)
 
 ---
 
