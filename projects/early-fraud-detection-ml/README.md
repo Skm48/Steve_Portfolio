@@ -43,28 +43,28 @@ The following visualisations highlight key patterns observed during exploratory 
 **Fraud vs Legitimate Claims Distribution**
 The dataset contains 18.5% fraudulent claims, providing a reasonable class balance for modelling while still reflecting real-world imbalance challenges.
 
-![Fraud Distribution](outputs/figures/01_fraud_vs_legitimate.png)
+![Fraud Distribution](outputs/Figures/01_fraud_vs_legitimate.png)
 
 ---
 
 **Fraud Rate by Vehicle Maker**
 Fraud rates vary significantly across manufacturers, ranging from 9.3% to 47.5% among makers with 500 or more claims. This variation suggests that vehicle make carries some predictive signal for early fraud detection.
 
-![Fraud by Maker](outputs/figures/02_fraud_by_maker.png)
+![Fraud by Maker](outputs/Figures/02_fraud_by_maker.png)
 
 ---
 
 **Fraud Rate by Fuel Type**
 Diesel and petrol vehicles account for 97% of the dataset with similar fraud rates (~18%). Hybrid vehicles show a notably lower fraud rate (~13%), while electric and other fuel types have insufficient sample sizes for reliable inference.
 
-![Fraud by Fuel Type](outputs/figures/03_fraud_by_fuel_type.png)
+![Fraud by Fuel Type](outputs/Figures/03_fraud_by_fuel_type.png)
 
 ---
 
 **Feature Correlation Matrix**
 The strongest linear predictor (repair_hours, r = 0.29) shows only modest correlation with fraud, confirming that most relationships are non-linear in nature. This motivates the use of tree-based models rather than linear classifiers.
 
-![Correlation](outputs/figures/08_correlation_heatmap.png)
+![Correlation](outputs/Figures/08_correlation_heatmap.png)
 
 ---
 ### 3. Modelling
@@ -110,7 +110,7 @@ SMOTE was applied only to training data in both cases to prevent leakage into th
 
 #### Model Comparison
 
-![Model Comparison](outputs/figures/13_model_comparison.png)
+![Model Comparison](outputs/Figures/13_model_comparison.png)
 
 | Model | Caught Fraud | Missed Fraud | Wrongly Flagged | AUC |
 |-------|-------------|-------------|----------------|-----|
@@ -123,19 +123,19 @@ SMOTE was applied only to training data in both cases to prevent leakage into th
 
 #### Confusion Matrices
 
-![Confusion Matrices](outputs/figures/09_confusion_matrices.png)
+![Confusion Matrices](outputs/Figures/09_confusion_matrices.png)
 
 ---
 
 #### ROC Curves
 
-![ROC Curves](outputs/figures/11_roc_curves.png)
+![ROC Curves](outputs/Figures/11_roc_curves.png)
 
 ---
 
 #### Feature Importance
 
-![Feature Importance](outputs/figures/10_feature_importance.png)
+![Feature Importance](outputs/Figures/10_feature_importance.png)
 
 The two tree-based models prioritised fundamentally different features. Random Forest was driven by continuous variables — vehicle price (0.19) and mileage (0.18) accounted for approximately 37% of total importance. XGBoost was driven by categorical variables — fuel type alone contributed an importance of 0.30, more than any two features combined in the Random Forest model.
 
@@ -143,7 +143,7 @@ The two tree-based models prioritised fundamentally different features. Random F
 
 ### 6. False Positive Impact Analysis
 
-![False Positive by Segment](outputs/figures/12_false_positive_by_segment.png)
+![False Positive by Segment](outputs/Figures/12_false_positive_by_segment.png)
 
 Every false positive represents a legitimate claimant whose repair is delayed pending a fraud investigation. Under the RF + SMOTE model, 4,576 legitimate claimants would be wrongly flagged, with a mean repair cost of £357.71 — slightly above the £313.02 mean for correctly cleared claims.
 
