@@ -1,0 +1,1094 @@
+---
+title: "MA7442 Assessment 1 Task 2: Modelling"
+author: "Steve Mathew - skm48"
+date: today
+format: 
+  pdf:
+    toc: true
+    number-sections: true
+engine: jupyter
+execute:
+  warning: false
+  message: false
+---
+
+# Introduction
+ 
+Insurance fraud estimated approximately £1.1 billion annually to the UK insurance industry [1] and these costs ultimately goes back to the consumers through higher premiums. Currently, we have many data driven solutions to combat this problem, the main indicators being repair cost-to-value ratios, repair duration, and claim patterns [2]. However, it must be noted that using such algorithmic detection can being in issues in fairness, early intervention, and the real-world consequences of detection errors. Insurance fraud also has important behavioural and socioeconomic dimensions, as individuals’ incentives and opportunity structures influence fraudulent activity [3]
+
+From The EDAin Task 1, we observed strong non linear fraud patterns across multiple features, such as the price-cost ratio, repair hours, and labour cost per hour. These findings, combined with recent research highlighting bias risks in fraud detection systems [4], [5], motivate three research questions. RQ1 examines whether uniform fraud detection thresholds introduce socioeconomic bias across vehicle price segments. RQ2 investigates whether fraud can be predicted at initial reporting and examines the real-world impact of misclassifying legitimate claims. RQ3 explores whether unsupervised clustering reveals natural risk groupings and whether fraud distributes fairly across these clusters.
+
+# Aims & Objective 
+
+**Overall Aim from this study:**
+
+To investigate fairness and effectiveness in insurance fraud detection system by analyzing the repair cost patterns, early prediction capabilities using pre repair attributes, and cliamant segmentation using vehicle and repair characteristics ensuring fraud prevention methodologies  do not have any systematic bias for economically vulnerable groups.
+
+**Objective 1:**
+
+To quantify the possible socioeconomic bias in our threshold-based fraud detection systems by statistically analyzing repair cost-to-value ratio distributions across vehicle price segments.
+
+**Objective 2:**
+
+Using initial claim characteristics, develop and assess predictive classification models for early fraud detection while considering the moral trade-offs between false positive effects and the accuracy of fraud prevention.
+
+**Objective 3:**
+
+Determine whether fraud risk groups allow for fair risk assessment without favoring any particular vehicle segment by using clustering techniques to find natural claimant groupings.
+
+# Research Questions
+
+**Research question 1**
+
+Does repair cost-to-value ratio distribution differ significantly across vehicle price segments, and could uniform fraud detection thresholds introduce socioeconomic bias by disproportionately flagging lower-priced vehicle owners?
+
+**Research question 2**
+
+Can we identify high-risk fraudulent claims at initial reporting using vehicle characteristics and estimated repair details, and what is the ethical trade-off between fraud prevention and wrongly delaying legitimate claims?
+
+**Research question 3**
+
+Can unsupervised clustering reveal natural groupings of claimants based on vehicle and repair characteristics, and does fraud risk distribution across clusters enable fair risk assessment without over-penalizing specific vehicle segments?
+
+# Refelctive Analysis 
+
+One of the key feedback, i have received for task 1 is that  RQ1 and RQ2 are similar in nature. I would like to highlights the key difference in my reflection.  RQ1 focuses exclusively on **bias analysis** , it uses statistical testing (Kruskal-Wallis, chi-square) to check whether existing threshold based detection rules gives unfair outcomes across price segments,with no predictive modelling involved. RQ2 focuses on **predictive modelling**, it builds classification models to predict fraud using pre-repair vehicle characteristics and examines the practical real-world consequences of model errors on legitimate claimants, such as delayed repairs and financial impact.
+
+Several other small improvement were made to RQs based on marker feedback from Task 1. First, the feedback said that descriptive statistics such as mean and standard deviation were reported for categorical variables, which is not meaningful.
+For RQ1 ,descriptive statistics are reported only for continuous variables, with categorical variables summarised using frequency counts and proportions. 
+
+Second, the feedback recommended using log scales for skewed distributions. This has been implemented for the price-cost ratio boxplot, which significantly improves readability by reducing the visual dominance of outliers. 
+
+Third, the feedback identified that references 6 and 7 were unclear in their connection to the analysis. In Task 2, 6 is used specifically in the context of threshold-based disparate impact, and 7 has been replaced with [4]  and [5], which directly address fairness in fraud detection systems.
+
+Finally, citation formatting has been standardised to IEEE format throughout the report.
+
+# Modelling and analysis 
+
+## Research question 1
+
+**Does repair cost-to-value ratio distribution differ significantly across vehicle price segments, and could uniform fraud detection thresholds introduce socioeconomic bias by disproportionately flagging lower-priced vehicle owners?**
+
+### Introduction
+
+One of the most commonly used indicator is the repair cost-to-value ratio, which measures repair costs as a percentage of a vehicle's market value. Claims exceeding a predefined threshold are flagged for further scrutiny, as inflated repair costs relative to vehicle value are a recognized fraud mechanism [2].
+
+However, this approach raises concerns about fairness across socioeconomic groups. A £500 repair represents 25% of a £2,000 budget vehicle's value but only 2.5% of a £20,000 premium vehicle. This means that identical repair costs produce vastly different ratios depending on vehicle value, potentially causing uniform thresholds to disproportionately flag owners of lower value vehicles who may also be lower income claimants. The EDA conducted in Task 1 helps us to confirm this concern, showing that the price-cost ratio is a strong fraud predictor, with fraud probability escalating from 17% at low ratios to 68% at ratios above 60%, yet budget vehicles naturally exhibit higher ratios regardless of fraud status.
+
+Recent research has highlighted the importance of fairness in fraud detection systems. [4] demonstrated that fraud detection models can disproportionately harm certain groups through interactions between data bias and model design, even when the detection rules appear neutral. Similarly, [5] conducted the first algorithmic bias audit in transaction fraud detection, finding significant bias in both service quality and fraud protection metrics. These findings suggest that seemingly objective fraud indicators may function as proxies for socioeconomic status, raising equality, diversity, and inclusion (EDI) concerns.
+
+This research question examines whether the price to cost ratio distribution differs significantly across vehicle price segments and whether applying uniform fraud detection thresholds introduces systematic socioeconomic bias against budget vehicle owners. Additionally, segment-specific adaptive thresholds are proposed and evaluated as a fairer alternative.
+
+### Methodology & Rationale
+
+A combination of descriptive, inferential, and applied statistical methods were used to investigate whether uniform fraud detection thresholds introduce socioeconomic bias across vehicle price segments, when  addressing the first research question.
+
+First step was to segment the vehicles into four price categories based on UK used car market classifications: Budget (£0-5k), Mid-range (£5k-15k), Premium (£15k-30k), and Luxury (£30k+).These market-based categories were chosen over statistical quartiles as they reflect real-world pricing tiers.
+
+Descriptive analysis was conducted to examine the distribution of the price-cost ratio across segments, revealing substantial differences in both central tendency and spread. A Kruskal Wallis H-test was then used to determine whether these distributional differences were statistically significant. This non-parametric test was selected over one-way ANOVA because the EDA demonstrated that price-cost ratio distributions are heavily right-skewed, violating the normality assumption required for ANOVA. he Kruskal-Wallis test is the nonparametric alternative to one-way ANOVA, appropriate for comparing distributions across independent groups without requiring normality assumptions [9].
+
+As our fraud rate was around 18% for the whole data set as found from the EDA, we applied a uniform 20% price to cost ratio threshold was applied, simulating a standard industry fraud flagging rule,  and flagging rates were calculated per segment. 
+the continuous price-cost ratio was converted into a binary flagged/not flagged variable using a uniform threshold and a chi-square test of independence was then applied to examine whether the proportion of flagged claims differed significantly across the four price segments, as it is the standard test for assessing associations between categorical variables [10] to directly address the bias question. As [4] demonstrated, fraud detection systems can disproportionately affect certain groups through data bias interactions, even when the detection rules themselves appear unbiased.
+
+Finally, segment-specific thresholds based on the 90th percentile of each segment's price-cost ratio distribution were proposed as a bias mitigation strategy. A second chi-square test was conducted to evaluate whether adaptive thresholds successfully eliminate the flagging disparity. This approach shows us fairer alternatives exist than uniform threshold flagging.The introduction of segment-specific thresholds removes this disparity and provides a practical solution for improving fairness, consistent with the bias mitigation toolkit principles outlined in [6].
+
+Overall, this methodology, which is  from descriptive exploration through statistical testing to applied bias mitigation — ensures both statistical rigor and practical relevance, while maintaining alignment with ethical and responsible data practices by explicitly examining how standard fraud detection rules may systematically disadvantage economically vulnerable claimants.
+
+### Results
+
+The cleaned dataset after task 1 EDA has been imported for this work and checked for any inconsistencies.
+
+```{python}
+import sys
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import stats
+
+
+# Load data
+Cleaned_data = pd.read_csv('cleaned_data.csv')
+
+print(f"Dataset shape: {Cleaned_data.shape}")
+print(f"Rows: {len(Cleaned_data)}")
+print(f"Columns: {len(Cleaned_data.columns)}")
+
+# Show first few rows
+Cleaned_data.head(4).T
+```
+
+```{python}
+# Create price segments
+bins = [0, 5000, 15000, 30000, 1000000]
+labels = ['Budget (£0-5k)', 'Mid-range (£5k-15k)', 
+          'Premium (£15k-30k)', 'Luxury (£30k+)']
+Cleaned_data['price_segment'] = pd.cut(Cleaned_data['Price'], bins=bins, labels=labels)
+
+# Summary table
+segment_summary = Cleaned_data.groupby('price_segment').agg(
+    Total_Claims=('anomaly_present', 'count'),
+    Fraud_Count=('anomaly_present', 'sum'),
+    Fraud_Rate=('anomaly_present', 'mean'),
+    Mean_Ratio=('price_cost_ratio', 'mean'),
+    Median_Ratio=('price_cost_ratio', 'median')
+).round(4)
+segment_summary['Fraud_Rate'] = (segment_summary['Fraud_Rate'] * 100).round(2)
+print(segment_summary)
+```
+Descriptive analysis of the four price segments reveals a clear pattern in both claim volume and fraud indicators.
+
+- The Mid-range segment contains the largest share of claims (115,002), followed by Budget (68,914), Premium (51,819), and Luxury (23,324). This distribution reflects the UK used car market, where mid-range vehicles dominate sales volume. The price-cost ratio shows a strong inverse relationship with vehicle value. 
+
+- Budget vehicles have the highest mean ratio (6.29%, median 3.01%), approximately three times that of Luxury vehicles (mean 1.96%, median 0.89%). This confirms that identical repair costs produce substantially higher ratios for lower-value vehicles, as a consequence of the mathematical relationship between repair cost and vehicle price.
+
+- But fraud rates show the opposite pattern. Budget vehicles have the lowest fraud rate (15.95%) while Luxury vehicles have the highest (20.53%). This inverse relationship between price to cost ratio and actual fraud rate is a key finding, it suggests that budget vehicle owners are naturally more likely to trigger ratio-based thresholds despite being less likely to commit fraud, raising concerns about socioeconomic fairness in threshold based detection systems.
+
+```{python}
+# Boxplot and fraud rate comparison
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+# Plot 1: Boxplot
+Cleaned_data.boxplot(column='price_cost_ratio', by='price_segment', ax=axes[0])
+axes[0].set_yscale('log')
+axes[0].set_title('Price-Cost Ratio by Vehicle Price Segment(Log Scale)', 
+                   fontsize=13, fontweight='bold')
+axes[0].set_xlabel('Price Segment', fontweight='bold')
+axes[0].set_ylabel('Repair Cost as % of Vehicle Price(Log Scale)', fontweight='bold')
+axes[0].get_figure().suptitle('')
+plt.sca(axes[0])
+plt.xticks(rotation=20, ha='right')
+
+# Plot 2: Fraud rate per segment
+fraud_rates = Cleaned_data.groupby('price_segment',observed=False)['anomaly_present'].mean() * 100
+colors = ['darkred' if r > 18.1 else 'green' for r in fraud_rates]
+axes[1].bar(range(len(fraud_rates)), fraud_rates, color=colors, 
+            alpha=0.7, edgecolor='black')
+axes[1].set_xticks(range(len(fraud_rates)))
+axes[1].set_xticklabels(labels, rotation=20, ha='right')
+axes[1].set_ylabel('Fraud Rate (%)', fontweight='bold')
+axes[1].set_title('Fraud Rate by Price Segment', 
+                   fontsize=13, fontweight='bold')
+axes[1].axhline(18.1, color='blue', linestyle='--', linewidth=2, 
+                label='Overall: 18.1%')
+axes[1].legend()
+axes[1].grid(axis='y', alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+From the boxplot and bar chat, apart from the earlier conclusions about the Fraud rate and mean ratio showing the opposite pattern, we also have the following observation, 
+
+The log-scaled boxplot reveals that Budget vehicles not only have higher median ratios but also show substantially wider interquartile ranges, indicating greater variability in repair cost relative to vehicle value. All segments display numerous outliers in the upper range, representing claims with disproportionately high repair costs. The combination of higher ratios and greater spread in the Budget segment means these claims are far more likely to exceed any uniform detection threshold.
+
+
+```{python}
+# Kruskal-Wallis Test
+groups = [group['price_cost_ratio'].values 
+          for name, group in Cleaned_data.groupby('price_segment', observed=False)]
+
+stat, p_value = stats.kruskal(*groups)
+
+print("Kruskal-Wallis H-test:")
+print(f"H-statistic: {stat:.4f}")
+print(f"p-value: {p_value:.4e}")
+print(f"Significant: {'Yes' if p_value < 0.05 else 'No'} (a = 0.05)")
+```
+The test was highly significant (H = 33,960.99, df = 3, p < 0.001), confirming that the price-cost ratio distributions differ substantially across vehicle price segments. This means that budget, mid-range, premium, and luxury vehicles do not share the same repair cost-to-value ratio distribution, with budget vehicles exhibiting significantly higher ratios (median 3.01%) compared to luxury vehicles (median 0.89%). This difference is a natural consequence of vehicle value rather than fraudulent behaviour, as identical repair costs produce mathematically higher ratios for lower-value vehicles. The significant distributional difference across segments provides the statistical foundation for investigating whether uniform fraud detection thresholds create socioeconomic bias, which is examined in the subsequent chi-square analysis
+
+```{python}
+#  Chi-Square Test - " Do fraud flagging rates differ by price segment?"
+
+#  uniform 20% threshold 
+Cleaned_data['flagged'] = (Cleaned_data['price_cost_ratio'] > 20).astype(int)
+
+# comparison table
+comparison = Cleaned_data.groupby('price_segment', observed=False).agg(
+    Total_Claims=('anomaly_present', 'count'),
+    Actual_Fraud_Rate=('anomaly_present', 'mean'),
+    Flagged_Rate=('flagged', 'mean')
+).round(4)
+comparison['Actual_Fraud_Rate'] = (comparison['Actual_Fraud_Rate'] * 100).round(2)
+comparison['Flagged_Rate'] = (comparison['Flagged_Rate'] * 100).round(2)
+
+print("Comparison: Actual Fraud Rate vs Flagged Rate by Segment")
+print(comparison)
+
+# Chi-square test
+chi_test = pd.crosstab(Cleaned_data['price_segment'], Cleaned_data['flagged'])
+chi2, p_value, dof, expected = stats.chi2_contingency(chi_test)
+
+print(f"\nChi-Square Test:")
+print(f"Chi-square statistic: {chi2:.4f}")
+print(f"p-value: {p_value:.2e}")
+print(f"Degrees of freedom: {dof}")
+print(f"Significant: {'Yes' if p_value < 0.05 else 'No'} (a = 0.05)")
+```
+A uniform 20% price to cost ratio threshold was applied as a fraud detection rule as per industry standards.
+The chi-square test of independence confirmed **that flagging rates differ significantly across price segments ($\chi^2$ = 4027.79, df = 3, p < 0.001).**
+
+Budget vehicle owners are flagged at 7.53%, nearly six times the rate of Luxury owners (1.30%), despite having the lowest actual fraud rate (15.95% vs 20.53%). Mid-range (2.66%) and Premium (1.94%) segments fall between these extremes but are still flagged at substantially lower rates than Budget. This demonstrates that a uniform threshold creates a systematic disadvantage for owners of lower value vehicles, that is, the segment with the highest flagging rate is the segment with the lowest actual fraud prevalence
+
+```{python}
+# Bias Visualisation
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+segments = ['Budget\n(£0-5k)', 'Mid-range\n(£5k-15k)', 
+            'Premium\n(£15k-30k)', 'Luxury\n(£30k+)']
+
+actual_fraud = [15.95, 18.82, 20.04, 20.53]
+flagged_rate = [7.53, 2.66, 1.94, 1.30]
+
+# Plot 1: Side by side comparison
+x = np.arange(len(segments))
+width = 0.35
+
+bars1 = axes[0].bar(x - width/2, actual_fraud, width, label='Actual Fraud Rate', 
+                     color='steelblue', alpha=0.7, edgecolor='black')
+bars2 = axes[0].bar(x + width/2, flagged_rate, width, label='Flagged Rate (>20%)', 
+                     color='darkred', alpha=0.7, edgecolor='black')
+
+axes[0].set_xlabel('Price Segment', fontweight='bold')
+axes[0].set_ylabel('Rate (%)', fontweight='bold')
+axes[0].set_title('Actual Fraud Rate vs Flagged Rate by Segment', 
+                   fontsize=13, fontweight='bold')
+axes[0].set_xticks(x)
+axes[0].set_xticklabels(segments)
+axes[0].legend()
+axes[0].grid(axis='y', alpha=0.3)
+
+# Plot 2: Ratio of flagged rate to actual fraud rate (over-flagging)
+over_flag_ratio = [f/a * 100 for f, a in zip(flagged_rate, actual_fraud)]
+colors = ['darkred' if r > 20 else 'green' for r in over_flag_ratio]
+
+axes[1].bar(range(len(segments)), over_flag_ratio, color=colors, 
+            alpha=0.7, edgecolor='black')
+axes[1].set_xticks(range(len(segments)))
+axes[1].set_xticklabels(segments)
+axes[1].set_ylabel('Flagged as % of Actual Fraud (%)', fontweight='bold')
+axes[1].set_title('Over-Flagging Ratio by Segment', 
+                   fontsize=13, fontweight='bold')
+axes[1].grid(axis='y', alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+The left chart shows the difference between the actual fraud rates and flagging rates under uniform 20% threshold. Budget vehicles have the lowest actual fraud rate (15.95%) yet the highest flagging rate (7.53%), while Luxury vehicles show the opposite, highest fraud rate (20.53%) but lowest flagging rate (1.30%). This inverse relationship demonstrates that the threshold penalises the wrong group.
+
+The right chart quantifies the over-flagging effect. Budget vehicle claims are flagged at approximately 47% of their actual fraud rate, meaning nearly half as many legitimate Budget claims are flagged as there are actual fraudulent ones. In contrast, Luxury vehicles are flagged at only 6% of their fraud rate. This eight-fold disparity in over-flagging confirms that uniform thresholds create systematic socioeconomic bias against owners of lower-value vehicles.
+
+```{python}
+# Segment-specific thresholds (top 10% flagged) based on each segment's distribution
+
+print("Comparison: Uniform vs Segment-Specific Thresholds")
+
+# Calculating 90th percentile per segment
+segment_thresholds = Cleaned_data.groupby('price_segment', observed=False)['price_cost_ratio'].quantile(0.90)
+print("\nSegment-Specific Thresholds (90th percentile):")
+print(segment_thresholds.round(2))
+
+# Applying segment-specific thresholds
+Cleaned_data['flagged_New'] = 0
+for segment in Cleaned_data['price_segment'].cat.categories:
+    mask = Cleaned_data['price_segment'] == segment
+    threshold = segment_thresholds[segment]
+    Cleaned_data.loc[mask, 'flagged_New'] = (Cleaned_data.loc[mask, 'price_cost_ratio'] > threshold).astype(int)
+
+# Compare uniform vs adaptive flagging rates
+
+print(f"{'Segment':<25} {'Fraud Rate':>12} {'Uniform Flag':>14} {'New Proposed Flag':>20}")
+
+
+for segment in Cleaned_data['price_segment'].cat.categories:
+    seg_data = Cleaned_data[Cleaned_data['price_segment'] == segment]
+    fraud = seg_data['anomaly_present'].mean() * 100
+    uniform = seg_data['flagged'].mean() * 100
+    adaptive = seg_data['flagged_New'].mean() * 100
+    print(f"{segment:<25} {fraud:>11.2f}% {uniform:>13.2f}% {adaptive:>14.2f}%")
+
+# Chi-square on adaptive flagging
+contingency_adaptive = pd.crosstab(Cleaned_data['price_segment'], Cleaned_data['flagged_New'])
+chi2_a, p_value_a, dof_a, expected_a = stats.chi2_contingency(contingency_adaptive)
+print(f"\nChi-Square Test (Adaptive Thresholds):")
+print(f"Chi-square statistic: {chi2_a:.4f}")
+print(f"p-value: {p_value_a:.2e}")
+```
+
+Segment-specific thresholds were calculated using the 90th percentile of each segment's price-cost ratio distribution. the above table,  shows us that it results to substantially different thresholds: Budget (15.84%), Mid-range (6.33%), Premium (5.38%), and Luxury (5.19%). These thresholds reflect the natural variation in repair cost relative to vehicle value across segments.
+
+Under the adaptive approach, flagging rates equalise at approximately 10% across all segments, compared to the highly disparate rates under the uniform threshold (7.53% for Budget vs 1.30% for Luxury). The chi-square test confirms that **proposed thresholds eliminate the significant disparity (χ² = 0.20, df = 3, p = 0.977)**, in contrast to the highly significant bias found under uniform thresholds ($\chi^2$ = 4027.79, p < 0.001).
+
+This demonstrates that segment-specific thresholds can maintain consistent fraud scrutiny across all price segments while removing the systematic disadvantage imposed on budget vehicle owners. The practical implication is that insurers can preserve fraud detection coverage without disproportionately targeting economically vulnerable claimants.
+```{python}
+# Visualisation: Uniform vs Adaptive Thresholds
+fig, ax = plt.subplots(figsize=(10, 6))
+
+segments = ['Budget\n(£0-5k)', 'Mid-range\n(£5k-15k)', 
+            'Premium\n(£15k-30k)', 'Luxury\n(£30k+)']
+
+actual = [15.95, 18.82, 20.04, 20.53]
+uniform = [7.53, 2.66, 1.94, 1.30]
+adaptive = [10.00, 10.00, 9.93, 10.00]
+
+x = np.arange(len(segments))
+width = 0.25
+
+ax.bar(x - width, actual, width, label='Actual Fraud Rate', 
+       color='steelblue', alpha=0.7, edgecolor='black')
+ax.bar(x, uniform, width, label='Uniform (>20%)', 
+       color='darkred', alpha=0.7, edgecolor='black')
+ax.bar(x + width, adaptive, width, label='Proposed (90th pctl)', 
+       color='green', alpha=0.7, edgecolor='black')
+
+ax.axhline(18.1, color='blue', linestyle='--', linewidth=2, 
+           label='Overall Fraud Rate: 18.1%')
+
+ax.set_ylabel('Rate (%)', fontweight='bold')
+ax.set_title('Actual Fraud Rate vs Uniform vs Adaptive Flagging Rates', 
+             fontsize=13, fontweight='bold')
+ax.set_xticks(x)
+ax.set_xticklabels(segments)
+ax.legend()
+ax.grid(axis='y', alpha=0.3)
+
+
+plt.tight_layout()
+plt.show()
+```
+
+The chart shows the improvement iin the fraud detection between the actual fraud rates and flagging rates under uniform 20% threshold. and the proposed method (with 90 percentile). The proposed method is closer to the actual fraud rate for mid, premium and luxury segments and clearly does not have any bias in between the vehicle group with better fraud detection rates. So, We have applied bias mitigation by ensuring both statistical rigor and practical relevance. 
+
+### Key Results 
+
+- The price-cost ratio distributions differ significantly across vehicle price segments (Kruskal-Wallis H = 33,960.99, p < 0.001), and from the box plots its clearly shows that  Budget vehicles showing median ratios is three times higher than Luxury vehicles (3.01% vs 0.89%), driven by vehicle value rather than fraud behaviour.
+- A uniform 20% threshold flags Budget owners at nearly six times the rate of Luxury owners (7.53% vs 1.30%), despite Budget vehicles having the lowest actual fraud rate (15.95% vs 20.53%). The chi-square test confirms this disparity is highly significant ($\chi^2$ = 4027.79, p < 0.001).
+- Segment-specific adaptive thresholds based on the 90th percentile successfully eliminate the bias, equalizing flagging rates at approximately 10% across all segments (χ² = 0.20, p = 0.977).
+
+## Research question 2 
+
+**Can we identify high-risk fraudulent claims at initial reporting using vehicle characteristics and estimated repair details, and what is the ethical trade-off between fraud prevention and wrongly delaying legitimate claims?**
+
+### Introduction
+
+The main objective of this research question is to investigate whether fraud can be predicted at the point of initial claim reporting, before repairs take place. The insures only access to vehicle characteristics (maker, price, mileage, fuel type) and estimated repair details (issue type, estimated complexity), but not actual repair costs or hours.This would enable insurers to flag suspicious claims for investigation before authorising repairs, potentially reducing fraud losses [8].
+
+But the down side this is that, early prediction systems inevitably generate false positives, which means legitimate claims wrongly flagged as fraudulent. [7] caution that such misclassification can delay urgent repairs, cause financial harm, and erode trust between insurers and policyholders. The real-world impact of these errors is rarely quantified in fraud detection literature, which tends to focus on model accuracy rather than the human consequences of misclassification.
+
+This research question examines both the feasibility of early fraud prediction using only pre-repair features, and the real-world consequences of false positives on legitimate claimants across different vehicle price segments.
+
+### Methodology & Rationale
+
+The variables choosen were 'Maker', 'Bodytype', 'Fuel_type_grouped', 'Gearbox' as categorical type and 'Price', 'Runned_Miles', 'Reg_year', 'issue_id', 'repair_complexity' as numerical types for this analysis. The categorical variable were then Hot encoded. 
+
+Three classification models were implemented to predict fraud using only pre-repair features: Logistic Regression as a baseline, Random Forest with SMOTE oversampling, and XGBoost with scale_pos_weight adjustment.These models were chosen for their for this ability to handle non-linear relationships and their differing approaches to handle class imbalance.
+
+Firstly, a Logistic Regression model was implemented as a baseline. Logistic Regression is a widely used method for binary classification problems and assumes a linear relationship between predictors and the outcome [8]. The data was split 70/30 for training and testing using stratified sampling to preserve the fraud rate (18.45%) across both sets.
+
+To capture these non-linear patterns, a Random Forest model was then implemented. Random Forest constructs multiple decision trees and aggregates their predictions, making it well suited for complex non-linear relationships [7]. However, to address the class imbalance (81.5% legitimate vs 18.5% fraud), SMOTE (Synthetic Minority Over-sampling Technique) was applied to the training data, generating synthetic fraud examples to balance the classes [13]. SMOTE was applied only to the training set to prevent data leakage into the test set.
+
+XGBoost was implemented as it handles class imbalance natively through the scale_pos_weight parameter, which adjusts the weight given to the minority class during training [14]. XGBoost builds trees sequentially, with each new tree correcting the errors of the previous one, enabling it to identify subtle fraud patterns.
+
+Finally, as an extension , a Multilayer Perceptron (MLP) was implemented to explore whether a neural network could better capture the more complex, non-linear relationships between pre-repair features and fraud. The model was structured with three hidden layers (128, 64, and 32 neurons) using ReLU activation functions, and trained with the Adam optimiser, which is commonly used due to its ability to adjust learning rates during training [18].To address class imbalance, SMOTE was applied to the training data, following the same approach used for the Random Forest model. Early stopping was also incorporated (patience = 10, validation split = 10%) to reduce the risk of overfitting, stopping training once validation performance stopped improving. In practice, the model converged after 96 epochs, well before reaching the maximum limit of 200.
+
+Hyperparameter tuning via RandomizedSearchCV was attempted for both the Random Forest and XGBoost models, however the process was computationally expensive and time-prohibitive within the scope of this project given the dataset size (259,059 observations), the use of 3-fold cross-validation, and the SMOTE oversampling applied within each fold.
+
+Models were evaluated not on accuracy alone, as overall accuracy is misleading with imbalanced data, but on the real-world trade off between fraud detection (recall) and harm to legitimate claimants (false positive rate). False positive rates were also analysed across the four price segments from RQ1 to examine whether early detection introduces similar socioeconomic bias. This approach ensures that model evaluation considers both effectiveness and EDI implications.
+
+### Results
+
+```{python}
+# Step 1: Feature Selection and Preparation
+from sklearn.preprocessing import LabelEncoder
+# Pre-repair features 
+categorical_features = ['Maker', 'Bodytype', 'Fuel_type_grouped', 'Gearbox']
+numerical_features = ['Price', 'Runned_Miles', 'Reg_year', 'issue_id', 'repair_complexity']
+
+# Encode categorical features
+le_dict = {}
+Cleaned_data_model = Cleaned_data.copy()
+for col in categorical_features:
+    le_dict[col] = LabelEncoder()
+    Cleaned_data_model[col + '_encoded'] = le_dict[col].fit_transform(Cleaned_data_model[col])
+
+# Final feature list
+feature_cols = [col + '_encoded' for col in categorical_features] + numerical_features
+X = Cleaned_data_model[feature_cols]
+y = Cleaned_data_model['anomaly_present']
+
+print("Features used for early prediction:")
+for f in feature_cols:
+    print(f"  {f}")
+print(f"\nDataset size: {len(X)}")
+print(f"Fraud rate: {y.mean()*100:.2f}%")
+```
+
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix
+
+# Step 2: Train/Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, 
+                                                      random_state=42, 
+                                                      stratify=y)
+
+print(f"Training set: {len(X_train)} ({y_train.mean()*100:.2f}% fraud)")
+print(f"Test set: {len(X_test)} ({y_test.mean()*100:.2f}% fraud)")
+
+# Baseline Model: Logistic Regression
+
+baseline_model = LogisticRegression(max_iter=1000, random_state=42)
+baseline_model.fit(X_train, y_train)
+
+y_pred_baseline = baseline_model.predict(X_test)
+
+print("\nBaseline Model: Logistic Regression")
+print(classification_report(y_test, y_pred_baseline, target_names=['Legitimate', 'Fraudulent']))
+
+cm_baseline = confusion_matrix(y_test, y_pred_baseline)
+print("Confusion Matrix:")
+print(f"  True Negatives (correct legitimate):  {cm_baseline[0][0]}")
+print(f"  False Positives (wrongly flagged):     {cm_baseline[0][1]}")
+print(f"  False Negatives (missed fraud):        {cm_baseline[1][0]}")
+print(f"  True Positives (caught fraud):         {cm_baseline[1][1]}")
+```
+The Logistic Regression baseline model achieved an overall accuracy of 82%. However, this figure is misleading, the model caught only 4 out of 14,340 fraudulent claims (recall = 0.00), effectively classifying almost every claim as legitimate. This occurs because with an 18.45% fraud rate, the model learns that predicting "legitimate" for every claim achieves high accuracy without learning any meaningful fraud patterns.
+
+This result has two important implications. First, it confirms that the relationship between pre-repair vehicle characteristics and fraud is non-linear, validating the EDA findings from Task 1 which identified threshold effects and non-linear fraud escalation patterns across multiple variables. Logistic Regression, which assumes a linear relationship between predictors and outcome, cannot capture these patterns. Second, it establishes that a simple linear approach is insufficient for early fraud detection, justifying the use of more complex non-linear models such as Random Forest and XGBoost.
+
+```{python}
+from sklearn.ensemble import RandomForestClassifier
+# Step 3: Random Forest Model
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+rf_model.fit(X_train, y_train)
+
+
+y_pred_rf = rf_model.predict(X_test)
+
+print("Random Forest Model")
+print(classification_report(y_test, y_pred_rf, target_names=['Legitimate', 'Fraudulent']))
+
+cm_rf = confusion_matrix(y_test, y_pred_rf)
+print("Confusion Matrix:")
+print(f"  True Negatives (correct legitimate):  {cm_rf[0][0]}")
+print(f"  False Positives (wrongly flagged):     {cm_rf[0][1]}")
+print(f"  False Negatives (missed fraud):        {cm_rf[1][0]}")
+print(f"  True Positives (caught fraud):         {cm_rf[1][1]}")
+```
+A Random Forest model was trained on the original imbalanced training data to assess its performance without any class balancing technique. The model achieved 82% overall accuracy, catching 3,058 of 14,340 fraudulent claims (21% recall) with 2,673 false positives. Precision for the fraud class was 0.53, meaning that just over half of the claims flagged as fraudulent were genuinely fraudulent.
+
+While the model shows a significant improvement over the Logistic Regression baseline, confirming that non-linear models can capture fraud patterns in pre-repair features, the 21% recall indicates that the model still misses the majority of fraud cases (11,282 out of 14,340). This is a consequence of the class imbalance — with 81.5% of the training data being legitimate, the model learns to favour the majority class, predicting legitimate more frequently to maximise overall accuracy at the expense of fraud detection [13]. To address this limitation, SMOTE oversampling was applied in the next step.
+
+
+```{python}
+from imblearn.over_sampling import SMOTE
+
+# Apply SMOTE to training data only
+smote = SMOTE(random_state=42)
+X_train_smote, y_train_smote = smote.fit_resample(X_train, y_train)
+
+print(f"Before SMOTE: Legitimate={sum(y_train==0)}, Fraud={sum(y_train==1)}")
+print(f"After SMOTE:  Legitimate={sum(y_train_smote==0)}, Fraud={sum(y_train_smote==1)}")
+
+# Train Random Forest on SMOTE data
+rf_smote = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+rf_smote.fit(X_train_smote, y_train_smote)
+
+y_pred_smote = rf_smote.predict(X_test)
+
+print("\nRandom Forest with SMOTE")
+print(classification_report(y_test, y_pred_smote, target_names=['Legitimate', 'Fraudulent']))
+
+cm_smote = confusion_matrix(y_test, y_pred_smote)
+print("Confusion Matrix:")
+print(f"  True Negatives (correct legitimate):  {cm_smote[0][0]}")
+print(f"  False Positives (wrongly flagged):     {cm_smote[0][1]}")
+print(f"  False Negatives (missed fraud):        {cm_smote[1][0]}")
+print(f"  True Positives (caught fraud):         {cm_smote[1][1]}")
+```
+To capture the non-linear patterns that Logistic Regression failed to detect, a Random Forest model was trained on SMOTE-balanced data. SMOTE oversampled the fraud class from 33,461 to 147,880 in the training set, matching the legitimate class count and enabling the model to learn fraud patterns more effectively.
+
+The model achieved 81% accuracy with substantially improved fraud detection, catching 3,860 of 14,340 fraudulent claims (27% recall) compared to just 4 with Logistic Regression. Precision for the fraud class was 0.46, meaning that of all claims flagged as fraudulent, 46% were genuinely fraudulent. The model generated 4,576 false positives — legitimate claims wrongly flagged for investigation.
+
+```{python}
+from xgboost import XGBClassifier
+
+# Calculate scale_pos_weight for imbalance handling
+scale = sum(y_train == 0) / sum(y_train == 1)
+xgb_model = XGBClassifier(n_estimators=100,
+scale_pos_weight=scale,
+random_state=42,
+eval_metric='logloss')
+xgb_model.fit(X_train, y_train)
+y_pred_xgb = xgb_model.predict(X_test)
+print("XGBoost Model")
+print(classification_report(y_test, y_pred_xgb, target_names=['Legitimate', 'Fraudulent']))
+cm_xgb = confusion_matrix(y_test, y_pred_xgb)
+print("Confusion Matrix:")
+print(f" True Negatives (correct legitimate): {cm_xgb[0][0]}")
+print(f" False Positives (wrongly flagged): {cm_xgb[0][1]}")
+print(f" False Negatives (missed fraud): {cm_xgb[1][0]}")
+print(f" True Positives (caught fraud): {cm_xgb[1][1]}")
+```
+
+XGBoost was implemented with the scale_pos_weight parameter set to 4.42, reflecting the ratio of legitimate to fraudulent claims in the training data. This native imbalance handling enables XGBoost to penalise misclassification of the minority fraud class more heavily during training, without requiring synthetic data generation [14].
+
+The model achieved 70% overall accuracy which is lower than the other models, but caught 8,361 of 14,340 fraudulent claims (58% recall), more than double the RF + SMOTE model. However, this improved fraud detection came at a substantial cost: 17,705 legitimate claims were wrongly flagged, nearly four times the RF + SMOTE figure of 4,576. Precision for the fraud class was 0.32, meaning that only one in three flagged claims was genuinely fraudulent.
+
+```{python}
+from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import roc_curve, auc
+
+# Apply SMOTE to handle imbalance (since MLPClassifier doesn't support sample_weight)
+smote = SMOTE(random_state=42)
+X_train_mlp, y_train_mlp = smote.fit_resample(X_train, y_train)
+print(f"After SMOTE: Legitimate={sum(y_train_mlp==0)}, Fraud={sum(y_train_mlp==1)}")
+
+# MLP Pipeline with scaling
+mlp_pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('clf', MLPClassifier(
+        hidden_layer_sizes=(128, 64, 32),
+        activation='relu',
+        solver='adam',
+        max_iter=200,
+        random_state=42,
+        early_stopping=True,
+        validation_fraction=0.1,
+        n_iter_no_change=10,
+        verbose=True
+    ))
+])
+
+print("\nTraining MLP (128 -> 64 -> 32)...")
+mlp_pipeline.fit(X_train_mlp, y_train_mlp)
+print(f"Training stopped after {mlp_pipeline.named_steps['clf'].n_iter_} epochs")
+
+y_pred_mlp = mlp_pipeline.predict(X_test)
+
+print("\nMLP Classifier Results")
+print(classification_report(y_test, y_pred_mlp,
+      target_names=['Legitimate', 'Fraudulent']))
+
+cm_mlp = confusion_matrix(y_test, y_pred_mlp)
+print("Confusion Matrix:")
+print(f"True Negatives  (correct legitimate): {cm_mlp[0][0]}")
+print(f"False Positives (wrongly flagged):     {cm_mlp[0][1]}")
+print(f"False Negatives (missed fraud):        {cm_mlp[1][0]}")
+print(f"True Positives  (caught fraud):        {cm_mlp[1][1]}")
+
+print(f"Epochs: {mlp_pipeline.named_steps['clf'].n_iter_}")
+y_prob_mlp = mlp_pipeline.predict_proba(X_test)[:, 1]
+fpr_mlp, tpr_mlp, _ = roc_curve(y_test, y_prob_mlp)
+auc_mlp = auc(fpr_mlp, tpr_mlp)
+print(f"MLP AUC: {auc_mlp:.3f}")
+
+```
+The MLP achieved an overall accuracy of 78%, identifying 4,048 out of 14,340 fraudulent claims (28% recall), with 6,612 false positives and an AUC of 0.656. Training stopped after 96 epochs due to early stopping, suggesting the model had converged well before reaching the maximum number of iterations.
+
+In terms of performance, the MLP was broadly comparable to the RF + SMOTE model (27% recall, AUC 0.666), but it produced a noticeably higher number of false positives (6,612 compared to 4,576). This implies that more legitimate claimants would be unnecessarily flagged for investigation, raising practical concerns around its use.
+
+Despite its more complex structure, the MLP did not offer a clear improvement over the tree-based models. This likely reflects the nature of the data, which is largely tabular and includes a mix of categorical vehicle attributes and simple numerical features. Such data is often better handled by ensemble tree methods rather than neural networks, as noted in previous studies on tabular classification [19].
+
+Overall, the AUC of 0.656 remains below the commonly accepted threshold of 0.70 for reliable discrimination. This further supports the earlier finding in RQ2 that pre-repair features alone provide limited predictive value for fraud detection, regardless of model complexity.
+
+```{python}
+import seaborn as sns
+
+fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+
+# 1. Logistic Regression
+cm_base = confusion_matrix(y_test, y_pred_baseline)
+sns.heatmap(cm_base, annot=True, fmt='d', cmap='Blues', ax=axes[0],
+            xticklabels=['Legitimate', 'Fraudulent'],
+            yticklabels=['Legitimate', 'Fraudulent'])
+axes[0].set_title('Logistic Regression (Baseline)', fontsize=12, fontweight='bold')
+axes[0].set_ylabel('Actual', fontweight='bold')
+axes[0].set_xlabel('Predicted', fontweight='bold')
+
+# 2. RF + SMOTE
+cm_smote = confusion_matrix(y_test, y_pred_smote)
+sns.heatmap(cm_smote, annot=True, fmt='d', cmap='Greens', ax=axes[1],
+            xticklabels=['Legitimate', 'Fraudulent'],
+            yticklabels=['Legitimate', 'Fraudulent'])
+axes[1].set_title('Random Forest + SMOTE', fontsize=12, fontweight='bold')
+axes[1].set_ylabel('Actual', fontweight='bold')
+axes[1].set_xlabel('Predicted', fontweight='bold')
+
+# 3. XGBoost
+cm_xgb = confusion_matrix(y_test, y_pred_xgb)
+sns.heatmap(cm_xgb, annot=True, fmt='d', cmap='Reds', ax=axes[2],
+            xticklabels=['Legitimate', 'Fraudulent'],
+            yticklabels=['Legitimate', 'Fraudulent'])
+axes[2].set_title('XGBoost', fontsize=12, fontweight='bold')
+axes[2].set_ylabel('Actual', fontweight='bold')
+axes[2].set_xlabel('Predicted', fontweight='bold')
+
+plt.tight_layout()
+plt.show()
+```
+The confusion matrices visually confirm the trade-off across models. The Logistic Regression matrix is heavily concentrated in the top-left cell (63,374 true negatives), indicating it classifies nearly every claim as legitimate. The RF + SMOTE matrix shows a more balanced distribution, with meaningful values in all four cells — 58,802 correct legitimate, 4,576 wrongly flagged, 10,480 missed fraud, and 3,860 correctly caught fraud. The XGBoost matrix shifts the balance further towards fraud detection, with the largest true positive count (8,361) but also the largest false positive count (17,705). The progression across the three matrices illustrates that improving fraud detection necessarily increases the number of legitimate claimants subjected to unnecessary investigation.
+
+```{python}
+# Feature Importance Comparison: RF vs XGBoost
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+# RF + SMOTE importance
+rf_imp = pd.DataFrame({
+    'Feature': feature_cols,
+    'Importance': rf_smote.feature_importances_
+}).sort_values('Importance', ascending=True)
+
+axes[0].barh(range(len(rf_imp)), rf_imp['Importance'], 
+             color='steelblue', alpha=0.7, edgecolor='black')
+axes[0].set_yticks(range(len(rf_imp)))
+axes[0].set_yticklabels(rf_imp['Feature'])
+axes[0].set_xlabel('Importance', fontweight='bold')
+axes[0].set_title('RF + SMOTE Feature Importance', fontsize=13, fontweight='bold')
+axes[0].grid(axis='x', alpha=0.3)
+
+# XGBoost importance
+xgb_imp = pd.DataFrame({
+    'Feature': feature_cols,
+    'Importance': xgb_model.feature_importances_
+}).sort_values('Importance', ascending=True)
+
+axes[1].barh(range(len(xgb_imp)), xgb_imp['Importance'], 
+             color='darkred', alpha=0.7, edgecolor='black')
+axes[1].set_yticks(range(len(xgb_imp)))
+axes[1].set_yticklabels(xgb_imp['Feature'])
+axes[1].set_xlabel('Importance', fontweight='bold')
+axes[1].set_title('XGBoost Feature Importance', fontsize=13, fontweight='bold')
+axes[1].grid(axis='x', alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+The two tree-based models prioritise fundamentally different features for fraud prediction. Random Forest relies heavily on continuous variables, with Price (0.19) and Runned_Miles (0.18) accounting for approximately 37% of total importance, followed by Maker (0.15) and Reg_year (0.13). Categorical features such as Gearbox, Fuel_type, and repair_complexity contribute minimally. In contrast, XGBoost prioritises categorical features, with Fuel_type (0.30) alone contributing more than any two features in the Random Forest model, followed by Bodytype (0.16), Maker (0.12), and repair_complexity (0.11). Continuous variables that dominate in Random Forest, Price (0.05) and Runned_Miles (0.04), rank near the bottom for XGBoost.
+
+```{python}
+from sklearn.metrics import roc_curve, auc
+
+fig, ax = plt.subplots(figsize=(8, 6))
+
+# Logistic Regression ROC
+y_prob_base = baseline_model.predict_proba(X_test)[:, 1]
+fpr_base, tpr_base, _ = roc_curve(y_test, y_prob_base)
+auc_base = auc(fpr_base, tpr_base)
+ax.plot(fpr_base, tpr_base, label=f'Logistic Regression (AUC = {auc_base:.3f})', 
+        color='grey', linewidth=2)
+
+# RF + SMOTE ROC
+y_prob_smote = rf_smote.predict_proba(X_test)[:, 1]
+fpr_smote, tpr_smote, _ = roc_curve(y_test, y_prob_smote)
+auc_smote = auc(fpr_smote, tpr_smote)
+ax.plot(fpr_smote, tpr_smote, label=f'RF + SMOTE (AUC = {auc_smote:.3f})', 
+        color='steelblue', linewidth=2)
+
+# XGBoost ROC
+y_prob_xgb = xgb_model.predict_proba(X_test)[:, 1]
+fpr_xgb, tpr_xgb, _ = roc_curve(y_test, y_prob_xgb)
+auc_xgb = auc(fpr_xgb, tpr_xgb)
+ax.plot(fpr_xgb, tpr_xgb, label=f'XGBoost (AUC = {auc_xgb:.3f})', 
+        color='darkred', linewidth=2)
+
+# Random line
+ax.plot([0, 1], [0, 1], 'k--', linewidth=1, label='Random (AUC = 0.500)')
+
+ax.set_xlabel('False Positive Rate', fontweight='bold')
+ax.set_ylabel('True Positive Rate', fontweight='bold')
+ax.set_title('ROC Curves: Model Comparison', fontsize=13, fontweight='bold')
+ax.legend(loc='lower right')
+ax.grid(alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+### ROC Curve Analysis
+
+The ROC curves compare the discriminative ability of all three models across all possible classification thresholds. XGBoost achieves the highest AUC (0.696), followed by RF + SMOTE (0.666) and Logistic Regression (0.528). The Logistic Regression curve sits close to the random baseline (AUC = 0.500), its confirms the inability to distinguish fraud from legitimate claims using pre-repair features.
+
+However, all AUC values remain below 0.70, which is generally considered the threshold for acceptable discriminative performance. This reinforces the central finding of RQ2: pre-repair vehicle characteristics alone provide limited predictive power for fraud detection. 
+
+### False Positive Analysis
+
+```{python}
+
+# False Positive Impact Analysis
+test_data = Cleaned_data_model.iloc[X_test.index].copy()
+test_data['pred_smote'] = y_pred_smote
+
+false_positives = test_data[(test_data['anomaly_present'] == 0) & (test_data['pred_smote'] == 1)]
+true_negatives = test_data[(test_data['anomaly_present'] == 0) & (test_data['pred_smote'] == 0)]
+
+
+print("False Positive Impact Analysis (RF + SMOTE)")
+print(f"Total false positives: {len(false_positives)}")
+
+print(f"\nRepair Cost ")
+print(f"FP mean repair cost:  £{false_positives['repair_cost'].mean():.2f}")
+print(f"TN mean repair cost:  £{true_negatives['repair_cost'].mean():.2f}")
+
+print(f"\nRepair Delay")
+print(f"FP mean repair lag (days): {false_positives['repair_lag_days'].mean():.2f}")
+print(f"TN mean repair lag (days): {true_negatives['repair_lag_days'].mean():.2f}")
+
+print(f"\nRepair Complexity")
+print(f"FP mean complexity: {false_positives['repair_complexity'].mean():.2f}")
+print(f"TN mean complexity: {true_negatives['repair_complexity'].mean():.2f}")
+
+# false classification analysis 
+# Summary Table
+
+print("\nModel Comparison Summary (Test set: 77,718)")
+print(f"{'Model':<25} {'Caught Fraud':>14} {'Missed Fraud':>14} {'Wrongly Flagged':>16}")
+print(f"{'Logistic Regression':<25} {cm_base[1][1]:>14} {cm_base[1][0]:>14} {cm_base[0][1]:>16}")
+print(f"{'RF + SMOTE':<25} {cm_smote[1][1]:>14} {cm_smote[1][0]:>14} {cm_smote[0][1]:>16}")
+print(f"{'XGBoost':<25} {cm_xgb[1][1]:>14} {cm_xgb[1][0]:>14} {cm_xgb[0][1]:>16}")
+
+```
+
+
+```{python}
+# False Positive Impact by Price Segment - All Models
+test_data = Cleaned_data_model.iloc[X_test.index].copy()
+test_data['pred_base'] = y_pred_baseline
+test_data['pred_smote'] = y_pred_smote
+test_data['pred_xgb'] = y_pred_xgb
+
+
+print("False Positive Rate by Price Segment")
+print(f"{'Segment':<25} {'Logistic':>10} {'RF+SMOTE':>10} {'XGBoost':>10}")
+
+
+for seg in ['Budget (£0-5k)', 'Mid-range (£5k-15k)', 'Premium (£15k-30k)', 'Luxury (£30k+)']:
+    legit = test_data[(test_data['anomaly_present'] == 0) & (test_data['price_segment'] == seg)]
+    total = len(legit)
+    
+    base_fp = len(legit[legit['pred_base'] == 1]) / total * 100
+    smote_fp = len(legit[legit['pred_smote'] == 1]) / total * 100
+    xgb_fp = len(legit[legit['pred_xgb'] == 1]) / total * 100
+    
+    print(f"{seg:<25} {base_fp:>9.2f}% {smote_fp:>9.2f}% {xgb_fp:>9.2f}%")
+    
+    # False Positive Rate by Segment - Model Comparison
+fig, ax = plt.subplots(figsize=(10, 6))
+
+segments = ['Budget\n(£0-5k)', 'Mid-range\n(£5k-15k)', 
+            'Premium\n(£15k-30k)', 'Luxury\n(£30k+)']
+
+smote_fp = [6.06, 7.41, 7.38, 9.54]
+xgb_fp = [23.69, 30.51, 27.94, 28.23]
+
+x = np.arange(len(segments))
+width = 0.35
+
+ax.bar(x - width/2, smote_fp, width, label='RF + SMOTE', 
+       color='steelblue', alpha=0.7, edgecolor='black')
+ax.bar(x + width/2, xgb_fp, width, label='XGBoost', 
+       color='darkred', alpha=0.7, edgecolor='black')
+
+ax.set_ylabel('False Positive Rate (%)', fontweight='bold')
+ax.set_title('Legitimate Claims Wrongly Flagged by Price Segment', 
+             fontsize=13, fontweight='bold')
+ax.set_xticks(x)
+ax.set_xticklabels(segments)
+ax.legend()
+ax.grid(axis='y', alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+The false positive analysis examines the real-world consequences of wrongly flagging legitimate claims. Under the RF + SMOTE model, 4,576 legitimate claimants would be subjected to fraud investigation. These false positives have a mean repair cost of £357.71, slightly higher than correctly classified legitimate claims (£313.02), suggesting that the model is partially flagging claims with above-average but still legitimate repair costs. Mean repair lag was similar between false positives (0.56 days) and true negatives (0.66 days), indicating that repair delays are not a distinguishing factor.
+
+The distribution of false positives across price segments reveals that Luxury vehicle owners are flagged at the highest rate (9.54% of legitimate Luxury claims), compared to Budget owners at the lowest rate (6.06%). This is the inverse of the threshold bias found in RQ1, where Budget owners were flagged six times more than Luxury owners. Under XGBoost, the false positive rates increase substantially across all segments (23-31%), with Mid-range owners most affected (30.51%).
+
+In practical terms, each false positive represents a legitimate claimant whose repair may be delayed pending investigation, causing inconvenience, potential additional vehicle damage from delayed repairs, and erosion of trust in the insurance process. For the RF + SMOTE model, this means 4,576 claimants experience unnecessary investigation to catch 3,860 genuine fraud cases which is a ratio of approximately 1.2 innocent claimants investigated per fraudster caught. For XGBoost, this ratio worsens to 2.1 innocent claimants per fraudster. These ratios should inform insurer policy on acceptable false positive thresholds, balancing fraud prevention against customer experience and fairness obligations.
+
+## Research question 3
+
+**Can unsupervised clustering reveal natural groupings of claimants based on vehicle and repair characteristics, and does fraud risk distribution across clusters enable fair risk assessment without over-penalizing specific vehicle segments?**
+
+### Introduction
+
+The previous research questions approached fraud detection using supervised methods. Specifically, RQ1 evaluated threshold-based rules, while RQ2 developed predictive models using labelled fraud data. However, a key limitation of these approaches is their reliance on existing fraud labels, which may be incomplete or subject to bias. As a result, important patterns in the data may remain undetected. Unsupervised methods provide a useful alternative by identifying underlying structures in the data without requiring labelled outcomes, and have the potential to uncover patterns that supervised approaches overlook [17].
+
+Findings from the Task 1 EDA indicated that fraud is not driven by a single variable, but instead emerges from interactions between multiple features. Variables such as vehicle price, repair hours, cost per hour, and the price to cost ratio all exhibited non linear relationships with fraud. This suggests that different types of claims may form distinct profiles based on combinations of these characteristics. However, an important concern raised in the Task 1 feedback is whether these data-driven groupings could introduce unintended bias. In particular, if clusters with higher fraud rates are dominated by lower-value vehicles, this would suggest that unsupervised approaches may replicate the socioeconomic bias identified earlier in RQ1.
+
+To address this, this research question applies K-means clustering to the full dataset, including both fraudulent and legitimate claims, in order to identify natural groupings based on vehicle and repair characteristics. The analysis then evaluates how fraud is distributed across these clusters, examines the characteristics of high-risk versus low-risk groups, and assesses whether certain vehicle segments are disproportionately represented in higher-risk clusters.
+
+
+### Methodology & Rationale
+
+K-means clustering was applied to the full dataset, incorporating both fraudulent and legitimate claims, to identify underlying structures in claimant behaviour based on vehicle and repair characteristics. Clustering the entire dataset, rather than restricting the analysis to known fraud cases, was a deliberate methodological choice. Focusing only on labelled fraud instances would risk reinforcing biases present in the labels themselves, whereas analysing the full dataset allows fraud prevalence to be examined across naturally occurring groups. This approach therefore provides a more neutral basis for identifying patterns, while also directly addressing the Task 1 feedback regarding the scope of clustering.
+
+Seven features were selected for the clustering analysis: Price, Runned_Miles, vehicle_age (constructed as the difference between Adv_year and Reg_year to improve interpretability over raw registration year), repair_hours, repair_complexity, cost_per_hour, and price_cost_ratio. Two variables were excluded following collinearity concerns identified in Task 1. Repair_cost was removed due to its correlation with cost_per_hour (r = 0.61), and repair_lag_days was excluded due to its correlation with repair_hours (r = 0.68). This decision reflects an important limitation of K-means: correlated features can disproportionately influence distance calculations, effectively over-weighting certain dimensions and distorting cluster structure [15]. However, removing variables may also lead to the loss of potentially informative signals, highlighting a trade-off between reducing redundancy and preserving information.
+
+All features were standardised using StandardScaler prior to clustering. This step is essential given that K-means relies on Euclidean distance, which is highly sensitive to differences in scale. Without standardisation, high-magnitude variables such as Price would dominate the clustering process, masking the contribution of lower-scale features such as repair_complexity. While standardisation ensures equal weighting across variables, it also implicitly assumes that all features are equally important, which may not reflect their true influence on fraud behaviour.
+
+The number of clusters (K) was determined using the Elbow method, which evaluates the reduction in within-cluster variance as the number of clusters increases.  K-means was chosen over alternative clustering approaches such as DBSCAN primarily for reasons of scalability and reproducibility. While DBSCAN has the advantage of identifying clusters of arbitrary shape and detecting outliers, it performs less reliably in high-dimensional spaces and requires careful tuning of the epsilon parameter, which becomes increasingly difficult when feature densities vary [16]. Given the size of the dataset (259,059 observations) and the number of features, K-means offered a computationally efficient and stable solution. However, K-means also imposes strong assumptions, including spherical cluster shapes and equal variance, which may not fully capture the complexity of real-world fraud patterns. To mitigate sensitivity to initialisation, the algorithm was run with n_init = 10, selecting the solution with the lowest inertia, and a fixed random_state of 42 was used to ensure reproducibility.
+
+Following clustering, each cluster was profiled using mean feature values, fraud rates, and the distribution of vehicle price segments. This enables interpretation of distinct claim profiles and comparison of fraud concentration across clusters. Crucially, it allows assessment of whether high-risk clusters disproportionately consist of lower-value vehicles, which would suggest that unsupervised segmentation may replicate the socioeconomic bias identified in RQ1. However, clustering remains an exploratory technique, and any observed patterns should be interpreted with caution, as they do not establish causal relationships.
+
+
+
+### Results 
+
+```{python}
+# Clustering Analysis
+# Step 1: Feature Selection
+
+Cleaned_data['vehicle_age'] = Cleaned_data['Adv_year'] - Cleaned_data['Reg_year']
+
+cluster_features = ['Price', 'Runned_Miles', 'repair_complexity',
+                    'repair_hours', 'cost_per_hour', 'price_cost_ratio', 'vehicle_age']
+
+print("Features selected for clustering:")
+for f in cluster_features:
+    print(f"  {f}")
+
+print(f"\nDropped due to collinearity:")
+print(f"  repair_cost (correlated with cost_per_hour, r=0.61)")
+print(f"  repair_lag_days (correlated with repair_hours, r=0.68)")
+
+print(f"\nDescriptive stats:")
+print(Cleaned_data[cluster_features].describe().round(2).T)
+```
+Seven features were selected for clustering, spanning both vehicle characteristics (Price, Runned_Miles, vehicle_age) and repair attributes (repair_hours, repair_complexity, cost_per_hour, price_cost_ratio). All features show substantial variation suitable for clustering, with particularly high standard deviations relative to their means in Price (std £19,873 vs mean £14,303), repair_hours (std 37.24 vs mean 9.36), and cost_per_hour (std £101.38 vs mean £72.40), indicating the presence of distinct subgroups within the data. All features were standardised to ensure equal contribution to the distance-based clustering algorithm.
+
+```{python}
+# Step 2: Scale features for clustering
+from sklearn.preprocessing import StandardScaler
+
+X_cluster = Cleaned_data[cluster_features].copy()
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_cluster)
+
+X_scaled_df = pd.DataFrame(X_scaled, columns=cluster_features)
+
+print("Scaled data summary:")
+print(X_scaled_df.describe().round(2).T)
+```
+
+```{python}
+# Step 3: Elbow Method to find optimal K
+from sklearn.cluster import KMeans
+
+inertias = []
+K_range = range(2, 9)
+
+for k in K_range:
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+    kmeans.fit(X_scaled)
+    inertias.append(kmeans.inertia_)
+    print(f"K={k}: Inertia={kmeans.inertia_:.2f}")
+    
+# Plot elbow
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.plot(K_range, inertias, 'bo-', linewidth=2, markersize=8)
+ax.set_xlabel('Number of Clusters (K)', fontweight='bold')
+ax.set_ylabel('Inertia', fontweight='bold')
+ax.set_title('Elbow Method for Optimal K', fontsize=13, fontweight='bold')
+ 
+ax.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+The Elbow method was applied for K values ranging from 2 to 8. The inertia decreases steeply from K=2 to K=5, after which the rate of reduction slows noticeably. The inertia values at K=5 and K=6 are almost identical, suggesting both are equally valid choices. K=6 was selected over K=5 because the additional cluster revealed a distinct fraud pattern, a group with 100% fraud rate characterised by extremely high repair hours (292 hours) and near-zero cost per hour (£1.29),  that was not identifiable at K=5. This additional cluster provides valuable insight into a specific fraud mechanism that would otherwise be merged into a larger, less interpretable group.
+
+
+```{python}
+# Step 4: K-Means Clustering 
+kmeans = KMeans(n_clusters=6, random_state=42, n_init=10)
+Cleaned_data['cluster'] = kmeans.fit_predict(X_scaled)
+
+# Cluster summary
+cluster_summary = Cleaned_data.groupby('cluster').agg(
+    Size=('anomaly_present', 'count'),
+    Fraud_Rate=('anomaly_present', 'mean'),
+    Mean_Price=('Price', 'mean'),
+    Mean_Mileage=('Runned_Miles', 'mean'),
+    Mean_Age=('vehicle_age', 'mean'),
+    Mean_Repair_Hours=('repair_hours', 'mean'),
+    Mean_Complexity=('repair_complexity', 'mean'),
+    Mean_Cost_Per_Hour=('cost_per_hour', 'mean'),
+    Mean_Ratio=('price_cost_ratio', 'mean')
+).round(2)
+
+cluster_summary['Fraud_Rate'] = (cluster_summary['Fraud_Rate'] * 100).round(2)
+# Visualisation
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+# Plot 1: Fraud rate by cluster
+colors = ['green' if r < 18.5 else 'darkred' for r in cluster_summary['Fraud_Rate']]
+axes[0,0].bar(range(6), cluster_summary['Fraud_Rate'], color=colors, 
+              alpha=0.7, edgecolor='black')
+axes[0,0].axhline(18.5, color='blue', linestyle='--', linewidth=2, label='Overall: 18.5%')
+axes[0,0].set_xlabel('Cluster', fontweight='bold')
+axes[0,0].set_ylabel('Fraud Rate (%)', fontweight='bold')
+axes[0,0].set_title('Fraud Rate by Cluster', fontsize=13, fontweight='bold')
+axes[0,0].legend()
+axes[0,0].grid(axis='y', alpha=0.3)
+
+# Plot 2: Cluster size
+axes[0,1].bar(range(6), cluster_summary['Size'], color='steelblue', 
+              alpha=0.7, edgecolor='black')
+axes[0,1].set_xlabel('Cluster', fontweight='bold')
+axes[0,1].set_ylabel('Number of Claims', fontweight='bold')
+axes[0,1].set_title('Cluster Size', fontsize=13, fontweight='bold')
+axes[0,1].grid(axis='y', alpha=0.3)
+
+# Plot 3: Mean price by cluster
+axes[1,0].bar(range(6), cluster_summary['Mean_Price'], color='steelblue', 
+              alpha=0.7, edgecolor='black')
+axes[1,0].set_xlabel('Cluster', fontweight='bold')
+axes[1,0].set_ylabel('Mean Price (£)', fontweight='bold')
+axes[1,0].set_title('Mean Vehicle Price by Cluster', fontsize=13, fontweight='bold')
+axes[1,0].grid(axis='y', alpha=0.3)
+
+# Plot 4: Mean repair hours by cluster
+axes[1,1].bar(range(6), cluster_summary['Mean_Repair_Hours'], color='steelblue', 
+              alpha=0.7, edgecolor='black')
+axes[1,1].set_xlabel('Cluster', fontweight='bold')
+axes[1,1].set_ylabel('Mean Repair Hours', fontweight='bold')
+axes[1,1].set_title('Mean Repair Hours by Cluster', fontsize=13, fontweight='bold')
+axes[1,1].grid(axis='y', alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+
+```{python}
+# Step 5: Price segment distribution by cluster
+print("=" * 70)
+print("Price Segment Distribution by Cluster (%)")
+print("=" * 70)
+
+segment_by_cluster = pd.crosstab(Cleaned_data['cluster'], Cleaned_data['price_segment'], 
+                                  normalize='index') * 100
+
+print(segment_by_cluster.round(2))
+
+# Visualisation
+fig, ax = plt.subplots(figsize=(10, 6))
+
+segment_by_cluster.plot(kind='bar', stacked=True, ax=ax, 
+                         colormap='RdYlGn_r', edgecolor='black', alpha=0.7)
+
+ax.set_xlabel('Cluster', fontweight='bold')
+ax.set_ylabel('Percentage (%)', fontweight='bold')
+ax.set_title('Price Segment Distribution by Cluster', fontsize=13, fontweight='bold')
+ax.legend(title='Price Segment', bbox_to_anchor=(1.05, 1))
+ax.set_xticklabels(range(6), rotation=0)
+ax.grid(axis='y', alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+print("Cluster Summary:")
+print(cluster_summary.T)
+print("\nPrice Segment Distribution (%):")
+print(segment_by_cluster.round(2).T)
+```
+
+**Cluster Interpretation and Fairness Analysis**
+
+**Cluster 0 — Premium High-Cost Fraud (13,042 claims, 32% fraud)**
+High-value newer vehicles (mean £32,557, age 2.13 years), extremely high cost per hour (£413.91), low mileage. The elevated fraud rate combined with inflated labour costs suggests premium billing fraud — legitimate repairs being grossly overcharged. Dominated by Premium and Luxury segments (80%).
+
+**Cluster 1 — Standard Legitimate Claims (123,392 claims, 17% fraud)**
+The largest cluster, mid-range vehicles (£14,480), moderate mileage, average cost per hour (£61.29). Fraud rate is below overall average — this is the baseline "normal claim" profile.
+
+**Cluster 2 — Aged Budget High-Ratio Claims (9,612 claims, 29% fraud)**
+Old, high-mileage budget vehicles (mean £4,715, 81k miles, age 9.6 years), high price-cost ratio (28.28). Elevated fraud likely driven by inflated repair costs relative to low vehicle value. Predominantly Budget segment (65%).
+
+**Cluster 3 — Complex Legitimate Premium Claims (26,443 claims, 15% fraud)**
+High-value vehicles (£37,968), highest repair complexity (3.03), reasonable cost per hour (£62.53). Low fraud despite high vehicle value — high complexity repairs appear genuinely legitimate.
+
+**Cluster 4 — Aged Budget Low-Cost Claims (83,099 claims, 15% fraud)**
+Similar vehicle profile to Cluster 2 (budget, high mileage) but very low cost per hour (£38.07) and low price-cost ratio (3.18). Low fraud rate suggests these are genuine low-cost repairs on older budget vehicles.
+
+**Cluster 5 — Pure Labour Fraud (3,471 claims, 100% fraud)**
+Mid-range vehicles, but defined by extreme repair hours (292 hours mean) and near-zero cost per hour (£1.29). This is a textbook labour inflation fraud pattern — hours are massively inflated while keeping the hourly rate suspiciously low to avoid cost-based detection.
+
+**Fairness Assessment**
+
+The price segment distribution across clusters provides a basis for evaluating whether unsupervised segmentation replicates the socioeconomic bias identified in RQ1. Clusters 2 and 4 are both predominantly Budget segment vehicles (65.12% and 65.39% respectively), yet their fraud rates diverge substantially (29% vs 15%). This divergence is critical: it demonstrates that the clustering algorithm is separating budget vehicle claims based on genuine behavioural differences in repair cost patterns rather than vehicle value alone. Cluster 4 budget vehicles, characterised by low cost per hour and moderate price-cost ratios, are correctly identified as low-risk. Cluster 2 budget vehicles, characterised by high price-cost ratios and elevated repair costs relative to vehicle value, carry genuinely higher fraud risk that is behaviourally justified.
+
+This contrasts with the finding from RQ1, where a uniform threshold flagged budget vehicle owners at six times the rate of luxury owners despite their lower actual fraud rate. The clustering approach avoids this bias by incorporating multiple repair behaviour features simultaneously, allowing risk to be determined by claim behaviour rather than vehicle value. High-fraud clusters (0 and 2) are not exclusively dominated by any single price segment — Cluster 0 is predominantly Premium and Luxury (80%), while Cluster 2 is predominantly Budget (65%). This cross-segment distribution of fraud risk suggests that the clustering enables fairer risk assessment, as high-risk groupings are driven by repair behaviour patterns rather than vehicle price proxies.
+
+However, a limitation remains: Cluster 2, the highest-fraud budget-dominated cluster, could still disproportionately affect budget vehicle owners in practice if cluster membership were used as a direct risk flag without further investigation. This reinforces the recommendation from RQ1 that any fraud detection system should incorporate segment-aware thresholds alongside behavioural clustering to ensure equitable treatment across socioeconomic groups.
+
+# Discussion
+
+This study investigated fairness and effectiveness in insurance fraud detection through three complementary research questions. Together, thee result highlight that effective fraud detection cannot be separated from fairness considerations which any detection approach, whether rule-based, model-based, or cluster-based, carries implications for how different groups of claimants are treated.
+
+The results from RQ1 confirm that price–cost ratio distributions differ significantly across vehicle price segments (Kruskal–Wallis H = 33,960.99, p < 0.001). The use of a non-parametric test was appropriate given the skewed distributions; however, the test itself does not indicate the magnitude or direction of these differences. As such, interpretation relies heavily on descriptive statistics and visualisations.The chi-square analysis highlights a clear disparity: under a uniform 20% threshold, budget vehicles are flagged at nearly six times the rate of luxury vehicles (7.53% vs 1.30%), despite having lower actual fraud rates (15.95% vs 20.53%). This suggests that the price–cost ratio acts as an unintended proxy for socioeconomic status, embedding structural bias into the detection rule. Similar concerns have been identified by [4], where seemingly neutral indicators produced unequal outcomes due to underlying data relationships.The introduction of segment-specific thresholds removes this disparity, equalising flagging rates across all groups (χ² = 0.20, p = 0.977). However, this approach is not without limitations. The 90th percentile threshold is a pragmatic choice, and alternative cut-offs would produce different outcomes depending on an insurer’s tolerance for false positives. In addition, price segments are defined using broad market categories, which may not reflect individual portfolio characteristics. More importantly, improving fairness through adaptive thresholds may alter fraud detection sensitivity across segments, potentially reducing the ability to identify high-risk claims in certain groups. This highlights an inherent trade-off between fairness and detection effectiveness, suggesting that bias mitigation must be evaluated alongside its impact on operational performance.
+
+
+The findings from RQ2 indicate that early fraud detection using pre-repair features is fundamentally limited. Even the best-performing model (XGBoost) achieved an AUC of only 0.696, suggesting that these variables alone provide weak discrimination between fraudulent and legitimate claims. This aligns with [7] , who argue that fraud signals are often stronger in post-event data, where behavioural patterns become clearer.Model comparison reveals clear trade-offs. Logistic Regression performs poorly, capturing almost no fraud cases, which reinforces the non-linear relationships identified in the EDA. RF + SMOTE provides the most balanced performance, achieving 27% recall with a moderate number of false positives. While SMOTE improves class balance, it introduces synthetic observations that may not fully reflect real fraud behaviour. In contrast, XGBoost substantially increases recall (58%) but at the cost of a sharp rise in false positives (17,705 cases), raising concerns about proportionality. In practical terms, this equates to a significantly higher number of legitimate claimants being subjected to unnecessary investigation.The distribution of errors also has important fairness implications. Unlike the threshold-based bias observed in RQ1, model-based approaches shift the impact across different vehicle segments depending on the features prioritised. This indicates that model choice itself can influence which groups are most affected by misclassification. RF + SMOTE offers the most balanced trade-off between fraud detection and customer impact, and is therefore the most suitable candidate for deployment. However, model performance is also sensitive to the choice of classification threshold. Using a default threshold of 0.5 may not reflect the optimal balance between detecting fraud and minimising harm to legitimate claimants. Lower thresholds would increase recall but at the cost of more false positives, reinforcing that model evaluation must consider both statistical performance and real-world consequences. As a result, early fraud detection systems should be used to trigger enhanced review rather than automatic rejection, ensuring that legitimate claims are not unduly delayed.
+
+The clustering analysis identified six distinct claim profiles, with fraud rates ranging from 14% to 100%, indicating that fraud is not uniformly distributed but concentrated within specific combinations of features. One cluster, characterised by extremely high repair hours and near-zero cost per hour, is suggestive of phantom repair fraud, where labour time is inflated without corresponding cost. This type of pattern would not be detectable through single-variable thresholds, highlighting the value of clustering in capturing multi-dimensional relationships. Additional clusters reveal different fraud mechanisms across vehicle segments. For example, one cluster is dominated by premium vehicles with unusually high labour rates, while another consists primarily of budget vehicles with elevated price–cost ratios. These variations suggest that fraud manifests differently depending on vehicle characteristics, supporting the need for more targeted detection strategies rather than uniform rules.Despite these strengths, several limitations must be acknowledged. K-means assumes spherical cluster structures and is sensitive to outliers, which may affect the stability of the results. The selection of K = 6 is based on a subjective interpretation of the elbow curve, and alternative values could lead to different segmentations. More importantly, clustering identifies patterns rather than definitive fraud mechanisms, meaning these interpretations remain inferential rather than conclusive.From a fairness perspective, high-fraud clusters are not confined to a single price segment but span budget, mid-range, premium, and luxury vehicles. This suggests that clustering does not inherently reproduce the socioeconomic bias observed in RQ1. However, cluster characteristics such as vehicle age and mileage may still correlate with socioeconomic factors, creating the potential for indirect bias. Therefore, while clustering offers a more nuanced approach to risk segmentation, its outputs should be applied cautiously and monitored to ensure equitable outcomes
+
+# Conclusion
+
+This study examined fairness and effectiveness in insurance fraud detection using three complementary approaches: threshold-based rules, predictive modelling, and unsupervised clustering. Across all approaches, a consistent tension emerges between improving fraud detection and ensuring equitable treatment of claimants.
+
+RQ1 showed that applying a uniform price–cost ratio threshold introduces a clear imbalance, disproportionately flagging lower-value vehicles despite lower fraud rates. This indicates that the metric itself embeds structural bias. Introducing segment-specific thresholds removes this disparity and provides a practical solution for improving fairness. However, this comes with a trade-off, as adjusting thresholds may alter detection sensitivity across different groups and affect overall effectiveness.
+
+RQ2 demonstrated that early fraud detection using pre-repair features is inherently limited, with all models achieving relatively modest performance (AUC < 0.70). While XGBoost improved recall, this came at the cost of a substantial increase in false positives, raising concerns about proportionality. The RF + SMOTE model offered a more balanced outcome, though it still failed to detect a large proportion of fraud cases. These findings suggest that early-stage models are best used to prioritise claims for further investigation rather than as standalone decision tools.
+
+RQ3 showed that fraud is not a single, uniform behaviour but occurs across several distinct claim profiles spanning all vehicle segments. This highlights that fraud risk arises from combinations of features rather than simple categories such as vehicle value, and supports a more targeted approach to detection.
+
+Together, these findings suggest that combining adaptive thresholds with profile-based segmentation can improve fairness while maintaining practical detection capability. However, several limitations remain. The dataset is drawn from a single marketplace, price segments are broadly defined, and clustering results depend on assumptions such as the choice of K. In addition, the use of a binary fraud label and the absence of demographic data limit the depth of the fairness analysis.
+
+Hyperparameter tuning via RandomizedSearchCV was attempted for both the Random Forest and XGBoost models, however the process was computationally expensive and time-prohibitive within the scope of this project given the dataset size (259,059 observations), the use of 3-fold cross-validation, and the SMOTE oversampling applied within each fold. Future work should explore systematic hyperparameter optimisation using distributed computing frameworks or cloud-based environments, which may yield further improvements in model performance and the precision-recall trade-off.
+
+Future work should address these limitations by testing adaptive thresholds on real insurance portfolios and monitoring both detection rates and fairness over time. Predictive models could also be extended into a two-stage framework, combining early screening with post-repair data to improve detection accuracy. Finally, alternative clustering methods such as DBSCAN should be explored, alongside the inclusion of demographic and geographic data, to provide a more comprehensive understanding of fraud risk and its distribution across different groups.
+
+
+# References
+
+[1] Association of British Insurers, “Detected fraud data,” 2023. [Online]. Available: https://www.abi.org.uk/ [Accessed: 19-Mar-2026]
+
+[2] R. A. Derrig, “Insurance fraud,” Journal of Risk and Insurance, vol. 69, no. 3, pp. 271–287, 2002.
+
+[3] S. Tennyson, “Moral, social, and economic dimensions of insurance claims fraud,” Social Research, vol. 75, no. 4, pp. 1181–1204, 2008.
+
+[4] J. Pombal, A. F. Cruz, J. Bravo, P. Saleiro, M. A. T. Figueiredo, and P. Bizarro, “Understanding unfairness in fraud detection through model and data bias interactions,” in Proc. KDD Workshop on Machine Learning in Finance, 2022.
+
+[5] P. Kamalaruban et al., “Evaluating fairness in transaction fraud models: fairness metrics, bias audits, and challenges,” in Proc. 5th ACM Int. Conf. on AI in Finance (ICAIF), pp. 555–563, 2024.
+
+[6] R. K. E. Bellamy et al., “AI fairness 360: an extensible toolkit for detecting and mitigating algorithmic bias,” IBM Journal of Research and Development, vol. 63, no. 4/5, pp. 4:1–4:15, 2019.
+
+[7] R. J. Bolton and D. J. Hand, “Statistical fraud detection: a review,” Statistical Science, vol. 17, no. 3, pp. 235–255, 2002.
+
+[8] C. Phua, V. Lee, K. Smith, and R. Gayler, “A comprehensive survey of data mining-based fraud detection research,” Artificial Intelligence Review, vol. 36, no. 1, pp. 1–14, 2010.
+
+[9] V. Bewick, L. Cheek, and J. Ball, “Statistics review 10: further nonparametric methods,” Critical Care, vol. 8, no. 3, pp. 196–199, 2004.
+
+[10] M. L. McHugh, “The chi-square test of independence,” Biochemia Medica, vol. 23, no. 2, pp. 143–149, 2013.
+
+[12] L. Breiman, “Random forests,” Machine Learning, vol. 45, no. 1, pp. 5–32, 2001.
+
+[13] N. V. Chawla, K. W. Bowyer, L. O. Hall, and W. P. Kegelmeyer, “SMOTE: synthetic minority over-sampling technique,” Journal of Artificial Intelligence Research, vol. 16, pp. 321–357, 2002.
+
+[14] T. Chen and C. Guestrin, “XGBoost: a scalable tree boosting system,” in Proc. 22nd ACM SIGKDD Int. Conf. on Knowledge Discovery and Data Mining, pp. 785–794, 2016.
+
+[15] T. Hastie, R. Tibshirani, and J. Friedman, The elements of statistical learning, 2nd ed. New York, NY, USA: Springer, 2009.
+
+[16] M. Ester, H.-P. Kriegel, J. Sander, and X. Xu, “A density-based algorithm for discovering clusters in large spatial databases with noise,” in Proc. 2nd Int. Conf. on Knowledge Discovery and Data Mining (KDD), pp. 226–231, 1996.
+
+[17] E. W. T. Ngai, Y. Hu, Y. H. Wong, Y. Chen, and X. Sun, “The application of data mining techniques in financial fraud detection: a classification framework and an academic review of literature,” Decision Support Systems, vol. 50, no. 3, pp. 559–569, 2011.
+
+[18] D. P. Kingma and J. Ba, "Adam: a method for stochastic optimization," in Proc. 3rd Int. Conf. on Learning Representations (ICLR), 2015.
+
+[19] L. Grinsztajn, E. Oyallon, and G. Varoquaux, "Why tree-based models still outperform deep learning on tabular data," in Proc. 36th Conf. on Neural Information Processing Systems (NeurIPS), 2022.
+
