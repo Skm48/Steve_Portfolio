@@ -12,10 +12,10 @@ Steve Mathew - Data Science Portfolio
 ## **📊 MINI PROJECTS**
 | Project | Description | Status | Tech |
 |---------|-------------|--------|------|
-| [Netherlands Energy](projects/netherlands-energy/) | CO₂ emissions analysis | ✅ Complete | R, ggplot2 |
-| [Europe EV Sales](projects/europe-ev-sales/) | EV sales forecasting | ✅ Complete | R, Panel data |
 | [Insurance Fraud Detection](projects/insurance-fraud-bias-analysis/) | **Bias-aware fraud system → removed 6× flagging disparity** | 🚀 Featured | Python, Stats, ML |
 | [Fraud Risk Segmentation](projects/fraud-risk-segmentation/)  | **Clustered claims into risk groups for smarter fraud detection** | 🚀 Featured | Python, K-Means |
+| [Netherlands Energy](projects/netherlands-energy/) | CO₂ Emissions & Climate Drivers: A Statistical Analysis of the Netherlands"| 🚀 Featured  | R, ggplot2 |
+| [Europe EV Sales](projects/europe-ev-sales/) | EV sales forecasting | ✅ Complete | R, Panel data |
 
 **[PROJECT_LOG.md](PROJECT_LOG.md)** → Full 4-week Energy Churn development journey
 
