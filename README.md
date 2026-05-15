@@ -7,7 +7,7 @@ Steve Mathew - Data Science Portfolio
 | Project | Description | Status | Tech |
 |---------|-------------|--------|------|
 | [UK Energy Churn](projects/uk-energy-churn/) | **82% recall → £2M savings** | 🛠️ Building (Jan 10) | R, Streamlit, XGBoost, SHAP |
-| [Early Fraud Detection](projects/early-fraud-detection-ml/) | **ML models to predict fraud before repairs + Achieved 56% recall in fraud detection** | 🚀 Featured | Python, XGBoost, Scikit-learn |
+| [Early Fraud Detection](projects/early-fraud-detection-ml/) | **ML models to predict fraud before repairs + Achieved 56% recall in fraud detection** | 🚀 Featured | Python, XGBoost, MLP, Scikit-learn |
 
 ## **📊 MINI PROJECTS**
 | Project | Description | Status | Tech |
