@@ -1,0 +1,1230 @@
+---
+title: "FDS Group Presentation"
+date: "`r format(Sys.Date())`"
+format: 
+  revealjs:
+    theme: serif
+    slide-number: true
+    title-slide-attributes:
+      data-background-color: "#f4f4ed"
+    footer: "Group_36_FDS_Group_Presentation"
+editor: visual
+---
+
+```{r}
+#| include: false 
+# use of Gen AI:
+# I have used Gen AI , model GPT5 to 
+
+# - generate many ideas for different research areas on the particular topics given in the course. 
+# Ex. Prompt: Could you generate ideas of study in climate change, Energy use,Carbon emissions, Renewable energy sources, Environmental policy from our world in data for data analysis studies?
+
+# - Once we formed the question and hypothesis, we checked the data avalibality in the website our world in data using AI
+# - Ex. Prompt: Could you check data availability for annual temperature, Co2 emission.. etc from our world in data website.
+
+# - After our study , some the results required deeper knowledge of the overall climate dynamics or overall european  climate poclies?, i have asked articles that can be coraborated with my results to find why it behaves that way( I have references those articles used)
+# Ex prompt- My results show that rho = 0.32, which is not very high, could you let me know why it behaves this way through some articles?
+# Ex prompt- WHy does many countries see shift in energy intensity and fossil fuel share after 1990? what policy changes has happened after that?
+
+# - I have had no experience in html format coding, i need to know how to change fonts, colors, placement of pictures, tables, text in a particular fit. So i used AI to generate syntax for these HTML presentation formatting.
+# Ex prompt - Could let me know how to place the table right of a pciture using html formatting?
+# Ex prompt - how ot add captions for a pciture using html formatting?
+# and also https://quarto.org/docs/presentations/revealjs/advanced.html which has been sited.
+
+```
+
+<h3 style="font-size: 2.7em; margin-top: 0;text-align: center;">
+
+Linking Carbon Emissions to Climate Change
+
+</h3>
+
+<hr style="width: 600px; margin: 50px auto; border-top: 5px solid #333;">
+
+<h3 style="font-size: 1.2em; margin-bottom: 5px;font-style: italic;text-align: center;">
+
+Investigating the CO₂ Drivers and
+
+</h3>
+
+<h3 style="font-size: 1.2em; margin-top: 0;font-style: italic;text-align: center;">
+
+Temperature Effects in the Netherlands
+
+</h3>
+
+```{=html}
+<style type="text/css">
+/* Only this slide */
+.reveal section.toc-slide h2 { font-size: 1.4em; }
+.reveal section.toc-slide h3 { font-size: 1.1em; margin: 0.1em 0; }
+.reveal section.toc-slide h4 { font-size: 0.9em; margin: 0.1em 0; }
+.reveal section.toc-slide p  { font-size: 0.65em;  margin: 0.1em 0 0.6em 0; }
+</style>
+```
+
+## Table of Contents {.toc-slide}
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+:::::: columns
+::: {.column width="33%"}
+<h2 style="font-size: 2.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+01
+
+</h2>
+
+<h3 style="font-size: 1.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+Introduction
+
+</h3>
+
+<h4 style="font-size: 0.5em; margin-top: 0; font-style: italic; text-align: center;">
+
+Setting the scene!
+
+</h4>
+
+<br>
+
+<h2 style="font-size: 2.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+04
+
+</h2>
+
+<h3 style="font-size: 1.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+Methodology
+
+</h3>
+
+<h4 style="font-size: 0.5em; margin-top: 0; font-style: italic; text-align: center;">
+
+From data to insight!
+
+</h4>
+:::
+
+::: {.column width="33%"}
+<h2 style="font-size: 2.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+02
+
+</h2>
+
+<h3 style="font-size: 1.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+Statement
+
+</h3>
+
+<h4 style="font-size: 0.5em; margin-top: 0; font-style: italic; text-align: center;">
+
+What we set out to know?
+
+</h4>
+
+<br>
+
+<h2 style="font-size: 2.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+05
+
+</h2>
+
+<h3 style="font-size: 1.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+Analysis
+
+</h3>
+
+<h4 style="font-size: 0.5em; margin-top: 0; font-style: italic; text-align: center;">
+
+Examining signals up close!
+
+</h4>
+:::
+
+::: {.column width="33%"}
+<h2 style="font-size: 2.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+03
+
+</h2>
+
+<h3 style="font-size: 1.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+Hypotheses
+
+</h3>
+
+<h4 style="font-size: 0.5em; margin-top: 0; font-style: italic; text-align: center;">
+
+Expectations before evidence!
+
+</h4>
+
+<br>
+
+<h2 style="font-size: 2.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+06
+
+</h2>
+
+<h3 style="font-size: 1.0em; margin-top: 0; font-style: bold; text-align: center;">
+
+Conclusion
+
+</h3>
+
+<h4 style="font-size: 0.5em; margin-top: 0; font-style: italic; text-align: center;">
+
+Final takeaway insights!
+
+</h4>
+:::
+::::::
+
+## Introduction {.toc-slide}
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+:::::: columns
+::: {.column width="33%"}
+#### What is climate change?
+
+Refers to long-term shifts in temperature and weather patterns.
+:::
+
+::: {.column width="33%"}
+#### Who is responsible?
+
+![*Fig 1: Global GHG emissions by sector – 2016 (1)*](public.avif){width="100%" fig-align="left"}
+:::
+
+::: {.column width="33%"}
+#### What is carbon footprint?
+
+Total GHG caused by a person, organization, product, or activity, expressed as CO₂ equivalent.
+:::
+::::::
+
+<h3 style="font-size: 1.0em; margin-top: 0; font-style: italic; text-align: left;">
+
+Is excess greenhouse gas (GHG) emissions, especially carbon dioxide (CO₂) the central driver for climate change?
+
+</h3>
+
+## 02 Research Questions {.toc-slide}
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+### 📝 Statements
+
+<h3 style="font-size: 1.6em; margin-top:100px 0;text-align: left;">
+
+Statement 1.
+
+</h3>
+
+<h4 style="font-size: 1.3em; margin-top: 0;text-align: left;">
+
+*How strongly are regional, for ex. in Netherlands, annual temperature increase is correlated with annual CO₂ emissions, and how has this relationship changed over the last few years?*
+
+<h4>
+
+<hr style="width: 500px; margin: 50px auto; border-top: 5px solid #333;">
+
+<h3 style="font-size: 1.6em; margin-top:100px 0;text-align: left;">
+
+Statement 2.
+
+</h3>
+
+<h4 style="font-size: 1.3em; margin-top: 0;text-align: left;">
+
+*What are the largest contributors to recent changes in CO₂ emissions \~ energy efficiency, GDP growth, or energy mix for Netherlands?*
+
+<h4>
+
+## 03 Hypotheses
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+#### 💡 Hypotheses for statement 1. (RQ1)
+
+<h3 style="font-size: 0.9em; margin-top: 0;text-align: left;">
+
+Q1.2: NL Temperature Trend
+
+<h3>
+
+<h4 style="font-size: 0.8em; margin-top: 0;text-align: left;font-weight: normal">
+
+**Hypothesis:** The linear trend (slope) of Netherlands annual mean temperature over time is not zero.
+
+<h4>
+
+<h3 style="font-size: 0.9em; margin-top: 0;text-align: left;">
+
+Q1.2: NL-Global Co-variance
+
+<h3>
+
+<h4 style="font-size: 0.8em; margin-top: 0;text-align: left;font-weight: normal">
+
+**Hypothesis:** There is linear association between detrended NL temperature anomalies and detrended global temperature anomalies.
+
+<h4>
+
+<h3 style="font-size: 0.9em; margin-top: 0;text-align: left;">
+
+Q1.3: Global CO₂/Temperature Association
+
+<h3>
+
+<h4 style="font-size: 0.8em; margin-top: 0;text-align: left;font-weight: normal">
+
+**Hypothesis:** Changes in atmospheric CO₂ are associated with changes in global mean surface temperature.
+
+<h4>
+
+## 03 Hypotheses
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+#### 💡 Hypotheses for statement 2. (RQ2)
+
+<h3 style="font-size: 0.9em; margin-top: 0;text-align: left;">
+
+Q2.1: NL\~CO₂ drivers Multi-variant regression analysis
+
+<h3>
+
+<h4 style="font-size: 0.75em; margin-top: 0;text-align: left;font-weight: normal">
+
+**Hypothesis:** GDP growth is the strongest and most consistent driver of annual CO₂ emission changes in the Netherlands, even when controlling for fossil-fuel share and energy-intensity changes.
+
+<h4>
+
+<h3 style="font-size: 0.6em; margin-top: 0;text-align: left;">
+
+Regression Model
+
+</h3>
+
+<p style="font-size: 0.6em; margin-top: 0;text-align: left;">
+
+Δln(CO₂<sub>t</sub>) = β<sub>0</sub> + β<sub>1</sub> Δln(GDP<sub>t</sub>) + β<sub>2</sub> Δln(FossilShare<sub>t</sub>) + β<sub>3</sub> Δln(EnergyIntensity<sub>t</sub>) + ε<sub>t</sub>
+
+</p>
+
+<h3 style="font-size: 0.7em; margin-top: 0;text-align: left;">
+
+Where:
+
+</h3>
+
+<ul style="font-size: 0.5em; margin-top: 0;text-align: left;">
+
+<li><b>Δln(CO₂<sub>t</sub>)</b> = annual growth rate of CO₂ emissions</li>
+
+<li><b>Δln(GDP<sub>t</sub>)</b> = annual GDP growth</li>
+
+<li><b>Δln(FossilShare<sub>t</sub>)</b> = percent change in fossil-fuel share</li>
+
+<li><b>Δln(EnergyIntensity<sub>t</sub>)</b> = percent change in energy intensity</li>
+
+<li><b>ε<sub>t</sub></b> = error term</li>
+
+</ul>
+
+## 04 Methodolgy
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+| [DATA SOURCES]{style="font-size: 0.55em;"} | [$\longrightarrow$]{style="font-size: 0.55em;"} | [DATA PROCESSING]{style="font-size: 0.55em;"} | [$\longrightarrow$]{style="font-size: 0.55em;"} | [STATISTICAL MODELS]{style="font-size: 0.55em;"} | [$\longrightarrow$]{style="font-size: 0.55em;"} | [PERIOD COMPARISON]{style="font-size: 0.5em;"} | [$\longrightarrow$]{style="font-size: 0.5em;"} | [INSIGHTS]{style="font-size: 0.5em;"} |   |
+|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
+| [*Action:* Temps(3), CO₂(4),GDP(5)(6), Energy(7)(8)(9)(10)]{style="font-size: 0.55em;"} |  | [*Method:* Cleaning, Transforming, detrending, Growth rates (Δln)]{style="font-size: 0.55em;"} |  | [*Method:*<br>Trends, covariance, Regression analyses, Multi-variant regression]{style="font-size: 0.55em;"} |  | [*Method:*<br> Pre vs Post 1990 Shifts in drivers]{style="font-size: 0.55em;"} |  | [Drivers, impacts, Final storyline]{style="font-size: 0.55em;"} |  |
+
+## 04 Analysis
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+#### Q1.1: Does Netherlands annual mean temperature over time follow a linear trend?
+
+```{r}
+#| include: false  
+
+library(tidyverse)
+library(lubridate)
+library(dplyr)
+
+# Step 1: Load the Dataset 
+
+# Fetch the data
+Annual_temperature <- read.csv("https://ourworldindata.org/grapher/average-monthly-surface-temperature.csv?v=1&csvType=filtered&useColumnShortNames=true&tab=line&time=earliest..2025-10-15&country=NLD~Europe+%28NIAID%29~OWID_WRL&overlay=download-data")
+head(Annual_temperature, 10)
+
+# Fetch the data carbon emissions_per capita
+Carbon_emission <- read.csv("https://ourworldindata.org/grapher/co-emissions-per-capita.csv?v=1&csvType=filtered&useColumnShortNames=true&country=OWID_WRL~OWID_EU27~NLD&overlay=download-data")
+
+head(Carbon_emission, 10)
+
+# Fetch the data carbon emission total
+Carbon_emission_tl <- read.csv("https://ourworldindata.org/grapher/annual-co2-emissions-per-country.csv?v=1&csvType=filtered&useColumnShortNames=true&country=OWID_WRL~OWID_EUR~NLD&overlay=download-data")
+head(Carbon_emission_tl, 10)
+```
+
+```{r}
+#| include: false  
+
+# Step 2 : Initial inspection
+glimpse(Annual_temperature)
+summary(Annual_temperature)
+
+glimpse(Carbon_emission)
+summary(Carbon_emission)
+
+glimpse(Carbon_emission_tl)
+summary(Carbon_emission_tl)
+```
+
+```{r}
+#| include: false  
+# Step 3 : Data cleaning
+# 3.1.1 : Count missing values in each column
+colSums(is.na(Annual_temperature))
+
+# 3.1.2: Remove rows with any missing values
+Annual_temperature_clean <- na.omit(Annual_temperature)
+
+# 3.1.3 : formating
+Annual_temperature_clean$entity <- str_trim(Annual_temperature_clean$entity )
+
+# 3.2.1 : Count missing values in each column
+colSums(is.na(Carbon_emission))
+
+#  3.2.2 : Remove rows with any missing values
+Carbon_emission_clean <- na.omit(Carbon_emission)
+
+#  3.2.3  : formating
+Carbon_emission$entity <- str_trim(Carbon_emission$entity )
+
+# 3.3.1 : Count missing values in each column
+colSums(is.na(Carbon_emission_tl))
+
+#  3.3.2 : Remove rows with any missing values
+Carbon_emission_tl_clean <- na.omit(Carbon_emission_tl)
+
+#  3.3.3  : formating
+Carbon_emission_tl$entity <- str_trim(Carbon_emission_tl$entity )
+names(Carbon_emission)
+names(Carbon_emission_tl)
+
+```
+
+```{r}
+#| include: false  
+# Step 4: Transformation, integration, validation
+Annual_temperature_group <- Annual_temperature_clean |> 
+  mutate(year = year(ymd(day)))|>
+  group_by(year, entity) |> 
+  summarise (Avg_temp = round ( mean (temperature_2m),2))
+
+NLD_AT <- Annual_temperature_group |>
+  filter (
+    entity == "Netherlands",          # Only Netherlands countries
+    year >= 1940 & year <= 2024 # Year range
+  )
+EU_AT <- Annual_temperature_group |>
+  filter (
+    entity == "Europe (NIAID)",          # Overall Europe
+    year >= 1940 & year <= 2024 # Year range
+  )
+WD_AT <- Annual_temperature_group |>
+  filter (
+    entity == "World",          # Overall Europe
+    year >= 1940 & year <= 2024 # Year range
+  )
+```
+
+```{r}
+#| include: false  
+# Step 5 : Descriptive statistics
+summary(NLD_AT)
+summary(EU_AT)
+summary(WD_AT)
+```
+
+::::: columns
+::: {.column width="68%"}
+```{r}
+# Step 6.1:  Visualization 
+# Linear trend plot 
+base_size <- 18
+ggplot(Annual_temperature_group, aes(x = year,
+                                     y = Avg_temp,
+                                     color = entity, group = entity)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 0.5) +
+  geom_smooth(method = "lm",
+              formula = y ~ poly(x, 2, raw = TRUE),
+              aes(color = entity),     # <-- IMPORTANT: separate lines,
+              se = TRUE) +
+
+  theme_minimal(base_size = base_size) + 
+  theme(
+    plot.background  = element_rect(fill = "#f4f4ed", colour = NA),   
+    panel.background = element_rect(fill = "#f4f4ed", colour = NA),
+    panel.grid.major = element_line(colour = "#dddddd"),
+    plot.title = element_text(size = 22, face = "bold",colour = "#333333"),
+    axis.text.x = element_text(size = 16,angle = 90, hjust = 1,colour = "#333333"),
+    axis.text.y = element_text(size = 16,colour = "#333333"),
+    axis.title.y = element_text(size = 16,colour = "#333333"),
+    axis.title = element_text(face = "bold",colour = "#333333"),
+    legend.text = element_text(size = 16,colour = "#333333"),
+    legend.title = element_text(size = 18,colour = "#333333")
+  ) +
+
+ labs(
+    title = "Annual average temperature  (Netherlands Vs Europe & World)",
+    y = "Annual average temperature(°C) ",
+    x = "",
+    color = "Region"
+  ) +
+  scale_x_continuous(
+    breaks = seq(1940, 2024, 5),
+    labels = seq(1940, 2024, 5)
+  )
+```
+:::
+
+::: {.column width="32%"}
+<h2 style="font-size: 0.58em; text-align: left;">
+
+Statistical Model Fit Summary
+
+</h2>
+
+| [Region]{style="font-size: 0.5em;"} | [$\mathbf{R}^2$]{style="font-size: 0.5em;"} | [$\mathbf{Pr(>|t|)}$]{style="font-size: 0.5em;"} |
+|:--------------------|:------------------------:|:------------------------:|
+| [**World**]{style="font-size: 0.5em;"} | [0.9217]{style="font-size: 0.5em;"} | [2.70e-16]{style="font-size: 0.5em;"} |
+| [**Europe**]{style="font-size: 0.5em;"} | [0.6349]{style="font-size: 0.5em;"} | [0.000264]{style="font-size: 0.5em;"} |
+| [**Netherlands**]{style="font-size: 0.5em;"} | [0.4941]{style="font-size: 0.5em;"} | [0.00131]{style="font-size: 0.5em;"} |
+:::
+:::::
+
+<h2 style="font-size: 0.6em; text-align: left;">
+
+*-Netherlands temperatures show a significant linear warming trend since the 1970s, tracking and slightly exceeding European/global rates.*<br> *- Moderate R² values reflect high inter annual variability from internal climate dynamics (11).*
+
+</h2>
+
+## 04 Analysis
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+#### Q1.2: Detrended Covariance \~ NL and Global Temp.
+
+::::: columns
+::: {.column width="68%"}
+```{r}
+# Step 6.2:  Visualization 
+# Detrend the time series using linear model residuals
+
+WD_Temp_scatter <-  full_join(WD_AT, NLD_AT, by = "year")
+WD_Temp_scatter_LM <- WD_Temp_scatter |>
+   mutate(Nld_temp = Avg_temp.y, Wd_temp = Avg_temp.x)|>
+   select(-Avg_temp.x,-Avg_temp.y)
+WD_Temp_scatter_LM <-WD_Temp_scatter_LM[, c(1, 2, 5, 3, 4)]
+
+nl_detrended <- resid(lm(WD_Temp_scatter_LM$Nld_temp ~ seq_along(WD_Temp_scatter_LM$Nld_temp)))
+global_detrended <- resid(lm(WD_Temp_scatter_LM$Wd_temp ~ seq_along(WD_Temp_scatter_LM$Wd_temp)))
+
+plot_df <- data.frame(
+  year = NLD_AT$year,
+  NL = nl_detrended,
+  Global = global_detrended
+)
+
+# Plot both series
+ggplot(plot_df, aes(x = Global, y = NL)) +
+  geom_point(color = "#333333", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "#333333", se = TRUE) +
+  labs(
+    title = "Scatter Plot of Detrended - NL vs Global Temperature Anomalies",
+    x = "Global Detrended Temperature(°C)",
+    y = "NL Detrended Temperature (°C)"
+  ) +
+  theme_minimal() + 
+  theme(
+    plot.margin = margin(t = 10, r = 10, b = 15, l = 15),
+    plot.background  = element_rect(fill = "#f4f4ed", colour = NA),   
+    panel.background = element_rect(fill = "#f4f4ed", colour = NA),
+    panel.grid.major = element_line(colour = "#dddddd"),
+    plot.title = element_text(size = 21, face = "bold",colour = "#333333",margin = margin(b = 8)),
+    axis.text.x = element_text(size = 16,colour = "#333333"),
+    axis.text.y = element_text(size = 16,colour = "#333333"),
+    axis.title.y = element_text(size = 16,colour = "#333333"),
+    axis.title.x = element_text(size = 16,colour = "#333333"),
+    axis.title = element_text(face = "bold",colour = "#333333"),
+  ) +
+  scale_x_continuous(
+    breaks = seq(-0.5, 0.5, 0.10),
+    labels = seq(-0.5, 0.5, 0.10)
+  ) 
+```
+:::
+
+::: {.column width="32%"}
+<h2 style="font-size: 0.58em; text-align: left;">
+
+Statistical Model Fit Summary
+
+</h2>
+
+| [Region]{style="font-size: 0.5em;"} | [$\mathbf{\rho}$]{style="font-size: 0.5em;"} | [$\mathbf{Pr(>|t|)}$]{style="font-size: 0.5em;"} |
+|:--------------------|:------------------------:|:------------------------:|
+| [**NLD/GBL**]{style="font-size: 0.5em;"} | [0.3242]{style="font-size: 0.5em;"} | [0.00247]{style="font-size: 0.5em;"} |
+:::
+:::::
+
+<h2 style="font-size: 0.60em; text-align: left;">
+
+*-Detrended Dutch (NL) temperatures show a modest but significant positive co-variation with global temperature anomalies (ρ ≈ 0.32).*<br><br> *-The relationship is statistically significant (p ≈ 0.002), indicating synchronized variability beyond long-term trends(12).*
+
+</h2>
+
+## 04 Analysis
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+#### Q1.3: Global CO₂ Concentration vs Temp. Relationship
+
+::::: columns
+::: {.column width="68%"}
+```{r}
+# Step 6.3:  Visualization 
+# regression plot
+WD_CE <- Carbon_emission_tl_clean |>
+  filter(year >= 1940 & entity == "World")|>
+  rename(year = year)
+
+WD_scatter <-   full_join(WD_AT, WD_CE, by = "year")
+WD_scatter <- WD_scatter|>
+  filter(year >= 1940)
+
+ggplot(WD_scatter, aes(x = emissions_total/100000000, y = Avg_temp)) +
+    geom_point(aes(),size = 0.75, color = "#333333") +
+    geom_smooth(method = "lm",size = 0.75, color = "#333333", se = TRUE) +
+    theme_minimal() +
+    theme(
+      plot.subtitle = element_text(size = 16),
+      axis.text.x = element_text(size = 16),
+      axis.text.y = element_text(size = 16),
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      plot.margin = margin(t = 10, r = 10, b = 15, l = 15),
+      plot.background  = element_rect(fill = "#f4f4ed", colour = NA),   
+      panel.background = element_rect(fill = "#f4f4ed", colour = NA),
+      panel.grid.major = element_line(colour = "#dddddd"),
+      plot.title = element_text(size = 21, face = "bold",colour = "#333333",margin = margin(b = 8)),
+      text = element_text(color = "#333333"),
+      axis.text = element_text(color = "#333333"),
+      axis.title = element_text(color = "#333333", face = "bold")
+    ) +
+   labs(
+     title = "Average temperature vs CO₂ emissions (Global)",
+     y = "Annual average temperature (°C) ",
+     x = "Annual CO₂ emissions (billion-tons)"
+   ) 
+```
+:::
+
+::: {.column width="32%"}
+<h2 style="font-size: 0.58em; text-align: left;">
+
+Statistical Model Fit Summary
+
+</h2>
+
+| [Region]{style="font-size: 0.5em;"} | [$\mathbf{R}^2$]{style="font-size: 0.5em;"} | [$\mathbf{Pr(>|t|)}$]{style="font-size: 0.5em;"} |
+|:--------------------|:------------------------:|:------------------------:|
+| [**World**]{style="font-size: 0.5em;"} | [0.8401]{style="font-size: 0.5em;"} | [2.2e-16]{style="font-size: 0.5em;"} |
+:::
+:::::
+
+<h2 style="font-size: 0.60em; text-align: left;">
+
+*-Global CO₂ levels show a very strong statistical association with temperature increases (R² = 0.84), consistent with the established physical link.*<br><br> *-The results clearly indicate that increasing CO₂ emissions are the primary driver of warming globally and in the Netherlands.*
+
+</h2>
+
+## 04 Analysis
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+#### Key CO₂ drivers \~ fossil fuel share and energy efficency?
+
+```{r}
+#| include: false 
+# Step 1: Load the Dataset 
+# Fetch the data
+GDP_per_capita <- read.csv("https://ourworldindata.org/grapher/gdp-per-capita-maddison-project-database.csv?v=1&csvType=filtered&useColumnShortNames=true&tab=line&time=1965..latest&country=NLD~OWID_WRL&overlay=download-data")
+head(GDP_per_capita, 10)
+SPE_FF <- read.csv("https://ourworldindata.org/grapher/fossil-fuels-share-energy.csv?v=1&csvType=filtered&useColumnShortNames=true&tab=line&country=NLD~OWID_WRL~OWID_EUR&overlay=download-data")
+head(SPE_FF, 10)
+SPE_TE <- read.csv("https://ourworldindata.org/grapher/primary-sub-energy-source.csv?v=1&csvType=filtered&useColumnShortNames=true&country=~NLD&overlay=download-data")
+head(SPE_TE, 10)
+SPE_EU_TE <- read.csv("https://ourworldindata.org/grapher/primary-sub-energy-source.csv?v=1&csvType=filtered&useColumnShortNames=true&country=~OWID_EUR&overlay=download-data")
+head(SPE_EU_TE, 10)
+FGUK_GDP_per_captia <- read.csv("https://ourworldindata.org/grapher/gdp-per-capita-maddison-project-database.csv?v=1&csvType=filtered&useColumnShortNames=true&tab=line&time=1963..latest&country=GBR~DEU~FRA&overlay=download-data")
+head(FGUK_GDP_per_captia)
+UK_SPE_TE <- read.csv("https://ourworldindata.org/grapher/primary-sub-energy-source.csv?v=1&csvType=filtered&useColumnShortNames=true&country=~GBR&overlay=download-data")
+GER_SPE_TE <- read.csv("https://ourworldindata.org/grapher/primary-sub-energy-source.csv?v=1&csvType=filtered&useColumnShortNames=true&country=~DEU&overlay=download-data")
+FRA_SPE_TE <- read.csv("https://ourworldindata.org/grapher/primary-sub-energy-source.csv?v=1&csvType=filtered&useColumnShortNames=true&country=~FRA&overlay=download-data")
+```
+
+```{r}
+#| include: false 
+# Step 2: Initial inspection
+glimpse(GDP_per_capita)
+summary(GDP_per_capita)
+
+glimpse(SPE_FF)
+summary(SPE_FF)
+
+glimpse(SPE_TE)
+summary(SPE_TE)
+
+glimpse(FGUK_GDP_per_captia)
+summary(FGUK_GDP_per_captia) 
+```
+
+```{r}
+#| include: false 
+# Step 3: Data cleaning
+# 3.1.1 : Count missing values in each column
+colSums(is.na(GDP_per_capita))
+
+# 3.1.2 : Remove ows with any missing values
+GDP_per_capita_clean <- GDP_per_capita
+  #select(-X900793.annotations )|>
+  #na.omit()
+
+# 3.1.3 : formating
+GDP_per_capita_clean$Entity <- str_trim(GDP_per_capita_clean$entity)
+
+# 3.2.1 : Count missing values in each column
+colSums(is.na(SPE_FF))
+
+# 3.2.2 : Remove rows with any missing values
+SPE_FF_clean <- SPE_FF|>
+  na.omit()
+
+# 3.2.3 : formating
+SPE_FF_clean$entity <- str_trim(SPE_FF_clean$entity)
+
+# 3.3.1 : Count missing values in each column
+colSums(is.na(SPE_TE))
+
+# 3.3.3 : Remove rows with any missing values
+SPE_TE_clean <- SPE_TE|>
+  na.omit()
+
+# 3.3.4 : formating
+SPE_TE_clean$entity <- str_trim(SPE_TE_clean$entity)
+
+# 3.4.1 : Count missing values in each column
+colSums(is.na(FGUK_GDP_per_captia))
+
+# 3.4.2 : Remove rows with any missing values
+FGUK_GDP_per_captia_clean <- FGUK_GDP_per_captia
+  #select(-X900793.annotations )|>
+  #na.omit()
+
+# 3.4.3 : formating
+FGUK_GDP_per_captia_clean$entity <- str_trim(FGUK_GDP_per_captia_clean$entity)
+
+# 3.5.1 : Count missing values in each column for UK total energy
+colSums(is.na(UK_SPE_TE))
+
+# 3.5.2 : Remove rows with any missing values
+UK_SPE_TE_clean <- UK_SPE_TE |>
+  na.omit()
+
+# 3.5.3 : formating
+UK_SPE_TE_clean$entity <- str_trim(UK_SPE_TE_clean$entity)
+
+# 3.6.1 : Count missing values in each column for Germany total energy
+colSums(is.na(GER_SPE_TE))
+
+# 3.6.2 : Remove rows with any missing values
+GER_SPE_TE_clean <- GER_SPE_TE |>
+  na.omit()
+
+# 3.6.3 : formating
+GER_SPE_TE_clean$entity <- str_trim(GER_SPE_TE_clean$entity)
+
+# 3.7.1 : Count missing values in each column for France total energy
+colSums(is.na(FRA_SPE_TE))
+
+# 3.7.2 : Remove rows with any missing values
+FRA_SPE_TE_clean <- FRA_SPE_TE |>
+  na.omit()
+
+# 3.7.3 : formating
+FRA_SPE_TE_clean$entity <- str_trim(FRA_SPE_TE_clean$entity)
+```
+
+```{r}
+#| include: false 
+# Step 4: Transformation, integration, validation
+NLD_GDP <- GDP_per_capita_clean |>
+  filter (
+    entity == "Netherlands",          # Only Netherlands countries
+    year >= 1965 & year <= 2022 # Year range
+  )
+EU_GDP <- GDP_per_capita_clean |>
+  filter (
+    entity == "Europe (UN)",          # Overall Europe
+    year >= 1954 & year <= 2022 # Year range
+  )
+WD_GDP <- GDP_per_capita_clean|>
+  filter (
+    entity == "World",          # Overall Europe
+    year >= 1965 & year <= 2022 # Year range
+  )
+
+NLD_SPE_FF <- SPE_FF_clean |>
+  filter (
+    entity == "Netherlands",          # Only Netherlands countries
+    year >= 1965 & year <= 2022 # Year range
+  )
+EU_SPE_FF<- SPE_FF_clean  |>
+  filter (
+    entity == "Europe (UN)",          # Overall Europe
+    year >= 1954 & year <= 2022 # Year range
+  )
+WD_SPE_FF <- SPE_FF_clean |>
+  filter (
+    entity == "World",          # Overall Europe
+    year >= 1965 & year <= 2022 # Year range
+  )
+
+NLD_SPE_TE <- SPE_TE_clean |>
+  filter (
+    entity == "Netherlands",          # Only Netherlands countries
+    year >= 1965 & year <= 2022)|> # Year range
+  mutate(TE = rowSums(across(c(4, 5,6,7,8,9,10,11,12))))
+
+NLD_CE <- Carbon_emission_tl_clean |>
+  filter(
+    year >= 1965 & year <= 2022,
+    entity == "Netherlands")
+
+NLD_Analysis2 <- NLD_GDP|>
+  left_join(NLD_SPE_FF, by = "year")|>
+  left_join(NLD_SPE_TE, by = "year")|>
+  left_join(NLD_CE, by = "year")|>
+  select(entity.x, code.x, year, gdp_per_capita, fossil_fuels__pct_equivalent_primary_energy, TE, emissions_total)|>
+  mutate(Energy_intensity = TE/gdp_per_capita)
+    
+ NLD_Analysis_pre <- NLD_Analysis2 |>
+  filter(
+    year >= 1965 & year <=1989)
+
+NLD_Analysis_post <- NLD_Analysis2 |>
+   filter(
+    year >= 1990 & year <= 2022)
+summary(NLD_Analysis2)
+
+# combine UK GER FRA 
+EU3_SPE_TE <- bind_rows (FRA_SPE_TE_clean,GER_SPE_TE_clean,UK_SPE_TE_clean)
+head(EU3_SPE_TE)
+
+EU3_SPE_TE <- EU3_SPE_TE|>
+  filter (
+    year >= 1965 & year <= 2022)|> # Year range
+  mutate(TE = rowSums(across(c(4,5,6,7,8,9,10,11,12))))|> 
+  mutate(entity = str_trim(entity))
+
+EU3_Analysis2 <- EU3_SPE_TE|>
+  left_join(FGUK_GDP_per_captia_clean, by = c("year","entity"))|>
+  select(entity, code.x, year, gdp_per_capita, TE)|>
+  mutate(Energy_intensity = TE/gdp_per_capita)
+
+summary(EU3_Analysis2) 
+```
+
+::::: columns
+::: {.column width="50%"}
+<p>[Percentage of total primary energy consumption supplied by coal, oil, and gas.]{style="font-size: 0.5em;"}</p>
+
+```{r}
+# Step 4.1:  Pre-Visualization 
+plot_spe_ff <- SPE_FF_clean |>
+  filter(entity %in% c("Netherlands", "Europe", "World")) |>
+  filter(year >= 1965 & year <= 2022)
+
+ggplot(plot_spe_ff,
+       aes(x = year,
+           y = fossil_fuels__pct_equivalent_primary_energy,
+           color = entity,
+           group = entity)) +
+  geom_line(size = 0.8,) +
+  geom_point(size = 1) +
+  scale_color_manual(values = c("Netherlands" = "#333333", "Europe" = "#2E8B57", World = "#32CD32")) +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "Share of primary energy from fossil fuels (NLD vs EU vs WD)",
+    x = " ",
+    y = "Fossil fuels share of energy (%)",
+    color = "Region"
+  ) +
+  scale_x_continuous(
+    breaks = seq(1965, 2022, 5),
+    labels = seq(1965, 2022, 5)
+  ) +
+  theme(
+      plot.subtitle = element_text(size = 16),
+      axis.text.x = element_text(size = 16,angle = 90, hjust =1),
+      axis.text.y = element_text(size = 16),
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      plot.margin = margin(t = 10, r = 10, b = 15, l = 15),
+      plot.background  = element_rect(fill = "#f4f4ed", colour = NA),   
+      panel.background = element_rect(fill = "#f4f4ed", colour = NA),
+      panel.grid.major = element_line(colour = "#dddddd"),
+      plot.title = element_text(size = 21, face = "bold",colour = "#333333",margin = margin(b = 8)),
+      text = element_text(color = "#333333"),
+      axis.text = element_text(color = "#333333"),
+      axis.title = element_text(color = "#333333", face = "bold"),
+      legend.text = element_text(size = 16,colour = "#333333"),
+      legend.title = element_text(size = 18,colour = "#333333")
+  )
+```
+:::
+
+::: {.column width="50%"}
+<p>[Energy Intensity = (Total Energy / GDP), <br> where, total energy = sum of primary energy sources]{style="font-size: 0.5em;"}</p>
+
+```{r}
+# Step 4.2:  Pre-Visualization 
+# Netherlands Vs top 3 EU countries
+# Netherlands data for plotting
+EI_NLD <- NLD_Analysis2 |>
+  mutate(Region = "Netherlands") |>
+  select(Region, year, Energy_intensity)
+
+#  (UK, Germany, France) for plotting
+EI_EU3 <- EU3_Analysis2 |>
+  mutate(Region = entity) |>
+  select(Region, year, Energy_intensity)
+
+# Bind into one plotting data frame
+EI_plot_df <- bind_rows(EI_NLD, EI_EU3)
+
+ggplot(EI_plot_df,
+       aes(x = year,
+           y = Energy_intensity,
+           color = Region,
+           group = Region)) +
+  geom_line(size = 0.8) +
+  scale_color_manual(values = c("Netherlands" = "#333333", "France" = "#2E8B57", Germany = "#32CD32", "United kingdom" = "#98FB98")) +
+  geom_point(size = 1) +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "Energy intensity (primary energy per unit of GDP)",
+    x = " ",
+    y = "Energy intensity (total energy / GDP)",
+    color = "Region"
+  ) +
+  scale_x_continuous(
+    breaks = seq(min(EI_plot_df$year), max(EI_plot_df$year), 5)
+  ) +
+  theme(
+      plot.subtitle = element_text(size = 16),
+      axis.text.x = element_text(size = 16,angle = 90, hjust =1),
+      axis.text.y = element_text(size = 16),
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      plot.margin = margin(t = 10, r = 10, b = 15, l = 15),
+      plot.background  = element_rect(fill = "#f4f4ed", colour = NA),   
+      panel.background = element_rect(fill = "#f4f4ed", colour = NA),
+      panel.grid.major = element_line(colour = "#dddddd"),
+      plot.title = element_text(size = 21, face = "bold",colour = "#333333",margin = margin(b = 8)),
+      text = element_text(color = "#333333"),
+      axis.text = element_text(color = "#333333"),
+      axis.title = element_text(color = "#333333", face = "bold"),
+      legend.text = element_text(size = 16,colour = "#333333"),
+      legend.title = element_text(size = 18,colour = "#333333")
+  )
+
+```
+:::
+:::::
+
+<h2 style="font-size: 0.5em; text-align: left;">
+
+*-Fossil fuel shares fall - decline becomes much steeper after about 1990, especially for the Netherlands relative to Europe and the world.*<br> *-Energy intensity drops - improves much faster after about 1990, with all becoming more efficiency driven.*<br> *-So, we decided to split our regression analysis into two periods to study these effects(pre and post 1990)*
+
+</h2>
+
+## 04 Analysis
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+#### Q2.1 NL\~CO₂ drivers - GDP growth
+
+```{r}
+#| include: false 
+# Step 5.1 : Modeling 
+# Multi-variant regression analysis pre 1990
+# log differences for growth rates
+NLD_Analysis_pre$CO2Growth <- c(NA, diff(log(NLD_Analysis_pre$emissions_total)))
+NLD_Analysis_pre$GDPGrowth <- c(NA, diff(log(NLD_Analysis_pre$gdp_per_capita)))
+NLD_Analysis_pre$EIGrowth <- c(NA, diff(log(NLD_Analysis_pre$Energy_intensity)))
+NLD_Analysis_pre$FSGrowth <- c(NA, diff(log(NLD_Analysis_pre$fossil_fuels__pct_equivalent_primary_energy)))
+
+# regression model
+Annova_model <- lm(CO2Growth ~ GDPGrowth + FSGrowth + EIGrowth, data = NLD_Analysis_pre)
+
+#  regression summary
+summary(Annova_model)
+```
+
+```{r}
+#| include: false 
+# Step 5.1 : Modeling 
+# Multi-variant regression analysis post 1990
+# log differences for growth rates
+NLD_Analysis_post$CO2Growth <- c(NA, diff(log(NLD_Analysis_post$emissions_total)))
+NLD_Analysis_post$GDPGrowth <- c(NA, diff(log(NLD_Analysis_post$gdp_per_capita)))
+NLD_Analysis_post$EIGrowth <- c(NA, diff(log(NLD_Analysis_post$Energy_intensity)))
+NLD_Analysis_post$FSGrowth <- c(NA, diff(log(NLD_Analysis_post$fossil_fuels__pct_equivalent_primary_energy)))
+
+# regression model
+Annova_90_model <- lm(CO2Growth ~ GDPGrowth + FSGrowth + EIGrowth, data = NLD_Analysis_post)
+
+# regression summary
+summary(Annova_90_model)
+```
+
+::::: columns
+::: {.column width="68%"}
+```{r}
+# Step 6.1:  Visualization 
+NLD_Analysis_pre <- NLD_Analysis_pre |> mutate(period = "Pre-1990")
+NLD_Analysis_post <- NLD_Analysis_post |> mutate(period = "Post-1990")
+NLD_Analysis_plot <- bind_rows(NLD_Analysis_pre, NLD_Analysis_post)
+
+# 1. GDPGrowth vs CO2Growth 
+ggplot(NLD_Analysis_plot, aes(x = GDPGrowth, y = CO2Growth, color = period)) +
+  geom_point(size = 2, alpha = 0.7,color = "#333333") +
+  scale_color_manual(values = c("Pre-1990" = "#333333", "Post-1990" = "#2E8B57")) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "CO₂ Growth vs GDP Growth (Pre vs Post 1990)",
+       x = "GDP Growth (log difference)",
+       y = "CO₂ Growth (log difference)",
+       color = "Period") +
+  theme_minimal(base_size = 14)+
+theme(
+      plot.subtitle = element_text(size = 16),
+      axis.text.x = element_text(size = 16),
+      axis.text.y = element_text(size = 16),
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      plot.margin = margin(t = 10, r = 10, b = 15, l = 15),
+      plot.background  = element_rect(fill = "#f4f4ed", colour = NA),   
+      panel.background = element_rect(fill = "#f4f4ed", colour = NA),
+      panel.grid.major = element_line(colour = "#dddddd"),
+      plot.title = element_text(size = 21, face = "bold",colour = "#333333",margin = margin(b = 8)),
+      text = element_text(color = "#333333"),
+      axis.text = element_text(color = "#333333"),
+      axis.title = element_text(color = "#333333", face = "bold")
+    ) 
+
+
+```
+:::
+
+::: {.column width="32%"}
+<h2 style="font-size: 0.58em; text-align: left;">
+
+Statistical Model Fit Summary
+
+</h2>
+
+| [Region]{style="font-size: 0.5em;"} | [$\mathbf{\beta}$]{style="font-size: 0.5em;"} | [$\mathbf{Pr(>|t|)}$]{style="font-size: 0.5em;"} |
+|:--------------------|:------------------------:|:------------------------:|
+| [**Pre-1990**]{style="font-size: 0.5em;"} | [2.14119]{style="font-size: 0.5em;"} | [0.00778\*]{style="font-size: 0.5em;"} |
+| [**Post-1990**]{style="font-size: 0.5em;"} | [0.966597]{style="font-size: 0.5em;"} | [4.3e-05\*]{style="font-size: 0.5em;"} |
+:::
+:::::
+
+<h2 style="font-size: 0.65em; text-align: left;">
+
+*-strong, statistically significant driver of CO₂ growth in both periods.* <br><br> *-The effect size drops after 1990, suggesting economies became somewhat less carbon-intensive even as growth continued to raise emissions.*
+
+<h2>
+
+## 04 Analysis
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+#### Q2.1 NL\~CO₂ drivers - Fossil Fuel Share growth
+
+::::: columns
+::: {.column width="68%"}
+```{r}
+# Step 6.2:  Visualization 
+# 2. FSGrowth vs CO2Growth
+ggplot(NLD_Analysis_plot, aes(x = FSGrowth, y = CO2Growth, color = period)) +
+  geom_point(size = 2, alpha = 0.7, color = "#333333") +
+  geom_smooth(method = "lm", se = TRUE) +
+  scale_color_manual(values = c("Pre-1990" = "#333333", "Post-1990" = "#2E8B57")) +
+  labs(title = "CO₂ Growth vs Fossil Share Growth (Pre vs Post 1990)",
+       x = "Fossil Share Growth (log difference)",
+       y = "CO₂ Growth (log difference)",
+       color = "Period") +
+  theme_minimal(base_size = 14) +
+theme(
+      plot.subtitle = element_text(size = 16),
+      axis.text.x = element_text(size = 16),
+      axis.text.y = element_text(size = 16),
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      plot.margin = margin(t = 10, r = 10, b = 15, l = 15),
+      plot.background  = element_rect(fill = "#f4f4ed", colour = NA),   
+      panel.background = element_rect(fill = "#f4f4ed", colour = NA),
+      panel.grid.major = element_line(colour = "#dddddd"),
+      plot.title = element_text(size = 21, face = "bold",colour = "#333333",margin = margin(b = 8)),
+      text = element_text(color = "#333333"),
+      axis.text = element_text(color = "#333333"),
+      axis.title = element_text(color = "#333333", face = "bold")
+    ) 
+```
+:::
+
+::: {.column width="32%"}
+<h2 style="font-size: 0.58em; text-align: left;">
+
+Statistical Model Fit Summary
+
+</h2>
+
+| [Region]{style="font-size: 0.5em;"} | [$\mathbf{\beta}$]{style="font-size: 0.5em;"} | [$\mathbf{Pr(>|t|)}$]{style="font-size: 0.5em;"} |
+|:--------------------|:------------------------:|:------------------------:|
+| [**Pre-1990**]{style="font-size: 0.5em;"} | [4.03462]{style="font-size: 0.5em;"} | [0.51390]{style="font-size: 0.5em;"} |
+| [**Post-1990**]{style="font-size: 0.5em;"} | [1.399934]{style="font-size: 0.5em;"} | [0.00353\*]{style="font-size: 0.5em;"} |
+:::
+:::::
+
+<h2 style="font-size: 0.65em; text-align: left;">
+
+*-CO₂ growth shows a weak, non-significant link to fossil-fuel share changes before 1990, but a strong, significant positive relationship emerges after 1990.*<br><br> *-This suggests fossil-fuel dependency became a much clearer driver of emissions growth in the post-1990 period.*
+
+<h2>
+
+## 04 Analysis
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+#### Q2.1 NL\~CO₂ drivers - Energy intensity growth
+
+::::: columns
+::: {.column width="68%"}
+```{r}
+# Step 6.3:  Visualization 
+# 3. EIGrowth vs CO2Growth
+ggplot(NLD_Analysis_plot, aes(x = EIGrowth, y = CO2Growth, color = period)) +
+  geom_point(size = 2, alpha = 0.7, color = "#333333") +
+  scale_color_manual(values = c("Pre-1990" = "#333333", "Post-1990" = "#2E8B57")) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "CO₂ Growth vs Energy Intensity Growth (Pre vs Post 1990)",
+       x = "Energy Intensity Growth (log difference)",
+       y = "CO₂ Growth (log difference)",
+       color = "Period") +
+  theme_minimal(base_size = 14) +
+theme(
+      plot.subtitle = element_text(size = 16),
+      axis.text.x = element_text(size = 16),
+      axis.text.y = element_text(size = 16),
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      plot.margin = margin(t = 10, r = 10, b = 15, l = 15),
+      plot.background  = element_rect(fill = "#f4f4ed", colour = NA),   
+      panel.background = element_rect(fill = "#f4f4ed", colour = NA),
+      panel.grid.major = element_line(colour = "#dddddd"),
+      plot.title = element_text(size = 21, face = "bold",colour = "#333333",margin = margin(b = 8)),
+      text = element_text(color = "#333333"),
+      axis.text = element_text(color = "#333333"),
+      axis.title = element_text(color = "#333333", face = "bold")
+    ) 
+```
+:::
+
+::: {.column width="32%"}
+<h2 style="font-size: 0.58em; text-align: left;">
+
+Statistical Model Fit Summary
+
+</h2>
+
+| [Region]{style="font-size: 0.5em;"} | [$\mathbf{\beta}$]{style="font-size: 0.5em;"} | [$\mathbf{Pr(>|t|)}$]{style="font-size: 0.5em;"} |
+|:--------------------|:------------------------:|:------------------------:|
+| [**Pre-1990**]{style="font-size: 0.5em;"} | [0.67796]{style="font-size: 0.5em;"} | [0.02726]{style="font-size: 0.5em;"} |
+| [**Post-1990**]{style="font-size: 0.5em;"} | [0.861386]{style="font-size: 0.5em;"} | [6.2e-07\*]{style="font-size: 0.5em;"} |
+:::
+:::::
+
+<h2 style="font-size: 0.65em; text-align: left;">
+
+*-Strong and significant driver of CO₂ growth both before and after 1990.* <br> <br> *-The relationship intensifies post-1990, indicating that efficiency improvements matter even more for emissions outcomes in the modern period.*
+
+<h2>
+
+## Conclusion– Key Takeaways
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+<h2 style="font-size: 0.8em; text-align: left;">
+
+RQ1 findings:<br> - Netherlands warming — clear rise.<br> - Netherlands ↔ Global covariance: Dutch year-to-year temperature swings track global anomalies.<br> - CO₂ is the main driver — global carbon rise explains most warming.<br><br> RQ2 findings:<br> - GDP growth raises emissions — strong pre-1990, still significant after.<br> - Energy efficiency reduces emissions — impactful before 1990, even stronger after.<br> - Fossil-fuel share matters more post-1990 — cleaner mix = clearer emission cuts.<br>
+
+</h2>
+
+<h3 style="font-size: 0.8em;font-style: italic; text-align: center;">
+
+“The world heats up, Netherlands follows - and our future now depends on smarter energy and a cleaner mix"
+
+</h3>
+
+# Thank you!
+
+## Bibliography reference
+
+<hr style="width: 1000px; margin: 10px 0; border-top: 5px solid #333;">
+
+<h3 style="font-size: 0.4em; text-align: left;">
+
+(1) Visual Capitalist. A global breakdown of greenhouse gas emissions by sector \[Internet\]. Vancouver (BC): Visual Capitalist; 2023 \[cited 2025 Dec 11\]. Available from: https://www.visualcapitalist.com/a-global-breakdown-of-greenhouse-gas-emissions-by-sector/
+(2) Our World in Data. Average monthly surface temperature \[Internet\]. Our World in Data; 2025 \[cited 2025 Dec 11\]. Available from: https://ourworldindata.org/grapher/average-monthly-surface-temperature?tab=line&time=earliest..2025-10-15&country=NLD~Europe+(NIAID)~OWID_WRL\[1\]
+(3) Our World in Data. Annual CO₂ emissions \[Internet\]. Our World in Data; 2025 \[cited 2025 Dec 11\]. Available from: https://ourworldindata.org/grapher/annual-co2-emissions-per-country?time=1960..latest&country=NLD~OWID_WRL~OWID_EUR.
+(4) Our World in Data. GDP per capita - Maddison Project Database \[Internet\]. Our World in Data; 2024 \[cited 2025 Dec 11\]. Available from: https://ourworldindata.org/grapher/gdp-per-capita-maddison-project-database?tab=line&time=1960..2022&country=\~NLD.
+(5) Our World in Data. GDP per capita - Maddison Project Database \[Internet\]. Our World in Data; 2024 \[cited 2025 Dec 11\]. Available from: https://ourworldindata.org/grapher/gdp-per-capita-maddison-project-database?tab=line&time=1960..2022&country=GBR~FRA~DEU&globe=1.
+(6) Our World in Data. Share of primary energy consumption from fossil fuels – Using the substitution method \[Internet\]. Our World in Data; 2025 \[cited 2025 Dec 11\]. Available from: https://ourworldindata.org/grapher/fossil-fuels-share-energy?tab=line&country=NLD~OWID_EUR~OWID_WRL.
+(7) Our World in Data. Primary energy consumption by source \[Internet\]. Our World in Data; 2025 \[cited 2025 Dec 11\]. Available from: https://ourworldindata.org/grapher/primary-sub-energy-source?country=\~NLD.
+(8) Our World in Data. Primary energy consumption by source \[Internet\]. Our World in Data; 2025 \[cited 2025 Dec 11\]. Available from: https://ourworldindata.org/grapher/primary-sub-energy-source?country=\~FRA.
+(9) Our World in Data. Primary energy consumption by source \[Internet\]. Our World in Data; 2025 \[cited 2025 Dec 11\]. Available from: https://ourworldindata.org/grapher/primary-sub-energy-source?country=\~GBR.
+(10) Our World in Data. Primary energy consumption by source \[Internet\]. Our World in Data; 2025 \[cited 2025 Dec 11\]. Available from: https://ourworldindata.org/grapher/primary-sub-energy-source?country=\~DEU.
+(11) von Storch H, Zwiers FW. Statistical Analysis in Climate Research. Cambridge: Cambridge University Press; 1999.
+(12) Shepherd TG. Atmospheric circulation as a source of uncertainty in climate change projections. Philos Trans R Soc A Math Phys Eng Sci. 2016;374(2080):20140426. doi:10.1098/rsta.2014.0426.
+
+</h3>
