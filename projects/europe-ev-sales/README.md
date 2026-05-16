@@ -139,6 +139,3 @@ IEA (2024); Global EV Data Explorer, https://www.iea.org/data-and-statistics/dat
 
 ---
 
-## Author
-
-Steve Koshy Mathew — MA7441 Operational Data Science, University of Leicester, 2025.
