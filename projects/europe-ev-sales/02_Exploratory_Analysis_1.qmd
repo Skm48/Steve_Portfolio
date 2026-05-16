@@ -1,0 +1,143 @@
+---
+title: "Week 4 – Statistics: Distributions & First Model"
+author: "Group Name / Members"
+date: "`r format(Sys.Date())`"
+format:
+  html:
+    toc: false
+    toc-depth: 2
+---
+
+## Overview {.unnumbered}
+
+::: callout-note
+### What this file is for
+
+This week is hands-on with **statistics**. You will:
+- Measure spread (**SD, IQR**) for two numerical variables
+- Visualise **distribution shapes** (histograms + Normal overlays)
+- Fit a **simple linear regression** (e.g., `grade ~ study_hours`)
+- Inspect **residuals** to check model fit
+- Record brief **group reflections**
+
+Work with your **cleaned Week 2 dataset** (no impossible or extreme values).
+:::
+
+---
+
+# Dataset & Setup
+
+Use your cleaned dataset prepared in Week 2. Mind the file path.
+
+```{r}
+library(tidyverse)
+
+# Load your cleaned dataset
+
+
+# Quick structure check
+
+```
+
+**Confirm (1–2 lines):** that the dataset loaded correctly (rows/columns) and that `grade` and `study_hours` are numeric.
+
+---
+
+# Spread & Variability
+
+Compute summaries, SD, and IQRs for at least two two main variables from your dataset (e.g., `grade` and `study_hours`).
+
+```{r}
+# Summaries
+
+
+
+```
+
+**Comment (2–3 lines):** Which variable varies more? Are the ranges reasonable? What does the **IQR** say about the middle 50%?
+
+---
+
+# Distribution Shapes
+
+Plot histograms and compare with a Normal curve for the same variables.
+
+```{r}
+# Histogram and normal curve for variable 1
+
+
+
+
+
+```
+
+**Comment (2–3 lines):** Is each variable roughly Normal, skewed, or heavy-tailed? Does the red curve fit well? Any gaps or outliers?
+
+---
+
+# First Model (Simple Linear Regression)
+
+Fit a simple linear model (use appropriate variables and reason your choice).
+
+```{r}
+# create a model usinf lm and provide summary
+
+
+```
+
+**Interpretation (3–4 lines):**
+- Intercept (β₀) = ___ means …
+- Slope (β₁) = ___ means …
+- (Optional) Is the slope statistically significant (p-value)?
+- (Optional) How much variation does the model explain (R²)?
+
+::: callout-note
+### What is a model?
+
+A **model** is a simplified, mathematical explanation of how things relate or behave.  
+It is **expressed mathematically** (equation/algorithm), **summarises** relationships, **simplifies** what matters, **generalises (within limits)**, and **must be interpretable**.
+
+> A good model is clear, honest, and useful — not a perfect copy of reality, but a way to think better about it.
+:::
+
+---
+
+# Model Fit (Residuals)
+
+Residuals are **errors** = observed − predicted. They should look like random noise around 0.
+
+```{r}
+# Plot the residuals including abline
+
+
+```
+
+**Comment (2–3 lines):** Are residuals roughly centred around 0 and randomly scattered? Any patterns or extreme points? What does this suggest about model fit?
+
+---
+
+# Group Reflection
+
+Keep answers short and specific (1–2 sentences each).
+
+| Question | Reflection |
+|:--|:--|
+| **Distributions:** What did shapes reveal about variation or consistency? | |
+| **Model:** What does your regression line suggest about the relationship? | |
+| **Learning:** What was the main thing you learned about your dataset this week? | |
+
+---
+
+# Expected Outputs
+
+Your file should include (at least):
+- Two distribution plots
+- One scatterplot with fitted regression line
+- One residual plot
+- Regression summary with brief interpretation
+- Completed reflection table
+
+---
+
+# You are free to explore further along modeling (e.g., trying different variable combinations, or trying multiple regression, or different models available in R libraries).
+# You may also explore along p-values and R².

@@ -1,0 +1,845 @@
+---
+#metadata-files: ["_metadata.yml"]
+title: "Week 2 – Dataset Exploration and First Wrangling"
+subtitle: "Selecting, Cleaning, and Understanding Your Data"
+author: "Group ID: ODS_Team_50"
+---
+
+# Overview
+*Introduce the purpose of Week 2 and what this document covers.*
+
+- Key aims of this week  
+  - Define objectives of the project and choose appropriate data from source.
+  - State the hypothesis from the objectives and justify the obtained data.
+  - Perform data wrangling (Duplicate identification, Missing data, and data tranformation)
+  - Perform basic EDA (structure, summaries, missingness, simple plots) and record issues/questions it reveals
+  - Discuss the refelection from each section with the team.
+  
+- Expected outcomes  
+  - Project objective finalized and extract raw data from source.
+  - Go through different objective and literature and fixed the hypothesis. 
+  - Raw data has been transformed into data for preliminary analysis.
+  - Using basic EDA, try to establish data consistency, and patterns for next level deeper analysis
+  - Write down our learnings and establish best way practices for the project
+  
+- General encouragement statement
+
+The project gives us the opportunity to learn and implement our learning and skills as a data engineer and understand the workflow the process in its entirety.
+
+---
+
+# Dataset Selection and Rationale
+## 1.1 Dataset choice
+
+  Transport industry has been of the largest contributors greehouse gas(GHG) emission. The primary goal in reducing emissions is vital to reach the EU’s 2050 climate neutrality objective. Electric vehicles(EV), which include battery electric vehicles (BEVs) and plug-in hybrid electric vehicles (PHEVs), are penetrating the EU market to adhere to this objective. The main objective of our study is to determine various socio-economic determinants for EV adoption in EU and to quantify the relative importance of these variables.
+  
+  The data set provides comprehensive information on global electric vehicle (EV) trends, focusing on vehicle stock, sales, charging infrastructure, and powertrain types (BEV, PHEV, FCEV) from 2010 to 2024. It includes detailed country-level data across multiple indicators such as EV adoption, policy incentives, energy use, and charging point deployment. The data set enables our team to understand various aspects of our learning from different modules and have an analytical report of the comparative analysis of EV growth, particularly across European region. 
+ 
+### (Insert code cells – load dataset)
+```{r}
+# Step 0: Load Required Libraries
+
+options(dplyr.summarise.inform = FALSE)
+knitr::opts_chunk$set(fig.width = 12, 
+                      fig.height =  8,
+                      include = TRUE,
+                      echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+
+# Step 1: Load the Dataset 
+# Reads the first sheet ("Page 1" in Excel)
+
+# ev_data <- read_excel("data/raw/EVDataExplorer2025.xlsx", sheet = 1)
+ev_data <- read_excel("~/Desktop/R_data/MA7441/Data/raw/EVDataExplorer2025.xlsx", sheet = 1)
+head(ev_data,10)
+```
+
+## 1.2 Justification
+
+The key objective of this study is try to quantify the influence of demographic, economic, and infrastructural variables on EV adoption rates.The main hypothesis of our study which was established through extensive literature surveys where  EV adoption rate determinants was investigated. Smith et al. (2022) found that income and urban density are significant predictors, while charging infrastructure availability strongly influences consumer decisions. 
+
+H1 Higher median income positively correlates with EV adoption.
+H2 Greater density of public charging stations leads to higher adoption.
+H3 Regions with higher fuel prices have faster EV uptake.
+
+As an preliminary step, we focus on H2 hypothesis. The obtained data includes country-level which includes EU27 data on  EV sales(BEV, PHEV, FCEV) and charging point deployment. This helps us make a preliminary analysis of the H2 hypothesis. The study will extend to other variables for our final report. We primarily focus on last 10 years of data(2015-2024), before which, the overall data seems to be sparse for many countries.
+
+# 2 First Glimpse of the Data
+## 2.1 Initial inspection
+Discuss the structure, dimensions, and variable types
+
+- The data frame contains 9 columns
+- The data frame has 16,436 row (observations)
+
+### (Insert code cells – glimpse, summary)
+```{r}
+# Step 2: Initial inspection
+glimpse(ev_data)
+summary(ev_data)
+```
+
+## 2.2 Observations
+Summarise key insights about shape, columns, and data types.
+
+- The data frame contains 9 columns, which includes 'region_country', 'category', 'parameter',  'mode', 'powertrain', 'year', 'unit', 'value', 'Aggregate group'. The main parameters we are interested are the region_country, year and unit.
+- The data frame has 16,436 row, which has lot of information. but we focus the EU countries, EV stock data, Cars for the EV adoption and EV charging point data.
+- So, The shape of a data frame is (16436,9)
+- The variable are either Character or double. There are 7 character tpye variables and 2 doubles type variable.
+- The statistical information from value is not inferenceable as it contains information from various range of categories and has to be deconstructed into various groups and then analysed.
+- The statistical information from year tells us that, historical data is available from 2010 to 2024 and projected data is available till 2030
+
+# 3 Initial Data Wrangling
+
+Document cleaning, transformations, and reasoning.
+
+The data set is fairly decent with no missing information rro duplication, as the source is a. well recorded government agency. Steps are,
+
+- checks for missing data 
+- check for duplication
+- Format check in year, countries and value 
+
+## 3.1 Cleaning
+
+Describe how you handled missing values, duplicates, formats.
+
+(Insert code cells – cleaning steps)
+
+```{r}
+# 3.1.1 : Count missing values in each column
+colSums(is.na(ev_data))
+
+# 3.1.2 : Remove rows with any missing values
+ev_data_clean <- na.omit(ev_data)
+
+# 3.1.3 : formating
+ev_data$region_country <- str_trim(ev_data$region_country)
+```
+
+## 3.2 Transformation, integration, validation
+
+Conceptual or implemented; note decisions or possible future steps.
+
+The data has to be cleaned and transformed for the next step of analysis.We need to extract just the EV sales, Electric chagring points, FCEV, PHEV data  from 2015 to 2024 for only the European countries. The following stepped were followed,
+
+- Identify the list of European countries and store it in a vector called europe_countries.
+- Using filtering process filter out the European countries, and str_detect function filter put only historical, BEV, EV stock , Cars data from year 2015 to 2024.
+- Selecting only the required columns
+- Cleaning the names of th data from any any white spaces
+- Grouping and summary to see the data
+- using Pivot wide function to create a table with different years nd countries.
+
+This process has been repeated from different parameter that we plan to study like Electric charging points, FCEV, PHEV.
+
+Critical Decision parameters:
+- European countries which has only the significant data
+- Pivot wide to make it 3d table rather than 2d for analysis
+- Historical data alone, No need to have projections.
+- BEV cars only for now ( as it is more significant in decision implementations )
+
+Possible future step:
+This has to be done for other futre data set such as population, income levels, fuel prices.
+
+(Insert code cells – optional transformation)
+
+```{r}
+# Step 3.2.1: Define List of European Countries
+europe_countries <- c(
+  "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic",
+  "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary",
+  "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta",
+  "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia",
+  "Spain", "Sweden", "Norway", "Iceland", "Switzerland", "United Kingdom"
+)
+# Step 3.2.2: EV Sales for year 2015 - 2024
+
+# Step 3.2.2.1: Filter for Europe, BEV, and Years 2015–2024 
+ev_europe_bev <- ev_data %>%
+  filter (
+    region_country %in% europe_countries,          # Only European countries
+    str_detect(powertrain, regex("BEV", ignore_case = TRUE)), # BEV only
+    year >= 2015 & year <= 2024,                   # Year range
+    str_detect(parameter, regex("EV stock", ignore_case = TRUE)),# EV stock data only
+    str_detect(category, regex("Historical", ignore_case = TRUE)),# His. data
+    str_detect(mode, regex("Cars", ignore_case = TRUE))# Passenger cars only
+  )
+
+# Step 3.2.2.2: Select Useful Columns
+ev_europe_bev <- ev_europe_bev %>%
+  select(region_country, year, value, unit)
+
+# Step 3.2.2.3: Clean Country Names (trim whitespace)
+ev_europe_bev$region_country <- str_trim(ev_europe_bev$region_country)
+
+#  Step 3.2.2.4: filter and summary
+filtered_ev_data <- ev_europe_bev |> 
+  group_by(region_country, year) |> 
+  select(region_country, year, value) 
+summary(filtered_ev_data)
+
+# Step 3.2.2.5: Pivot: Countries as rows, Years as columns
+ev_wide <- filtered_ev_data %>%
+  select(region_country, year, value) %>%
+  group_by(region_country, year) %>%
+  summarise(value = sum(value, na.rm = TRUE)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = year, values_from = value)
+
+```
+```{r}
+
+# Step 3.2.3: EV Charging for year 2015 - 2024 for differnet countires 
+# Step 3.2.3.1: Filter for Europe, , and Years 2015–2024 
+ec_europe_bev <- ev_data %>%
+  filter (
+    region_country %in% europe_countries,          # Only European countries
+    #str_detect(powertrain, regex("EV", ignore_case = TRUE)), # BEV only
+    year >= 2015 & year <= 2024,                   # Year range
+    str_detect(parameter, regex("EV charging points", ignore_case = TRUE)),# EV stock data only
+    str_detect(category, regex("Historical", ignore_case = TRUE)),# His. data
+    str_detect(mode, regex("EV", ignore_case = TRUE))# Passenger cars only
+  )
+
+# Step 3.2.3.2: Select Useful Columns
+ec_europe_bev <- ec_europe_bev %>%
+  select(region_country, year, value, unit)
+
+# Step 3.2.3.3: Clean Country Names (trim whitespace)
+ec_europe_bev$region_country <- str_trim(ec_europe_bev$region_country)
+
+#  Step 3.2.3.4: filter and summary
+filtered_ec_data <- ec_europe_bev |> 
+  group_by(region_country, year) |> 
+  select(region_country, year, value) 
+summary(filtered_ec_data)
+
+#  Step 3.2.3.5: Pivot: Countries as rows, Years as columns
+ec_wide <- filtered_ec_data %>%
+  select(region_country, year, value) %>%
+  group_by(region_country, year) %>%
+  summarise(value = sum(value, na.rm = TRUE)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = year, values_from = value)
+
+```
+```{r}
+# Step 3.2.4: FEV for year 2015 - 2024 for differnet countires 
+ev_europe_fev <- ev_data %>%
+  filter (
+    region_country %in% europe_countries,          # Only European countries
+    str_detect(powertrain, regex("FCEV", ignore_case = TRUE)), # FCEV only
+    year >= 2015 & year <= 2024,                   # Year range
+    str_detect(parameter, regex("EV stock", ignore_case = TRUE)),# EV stock data only
+    str_detect(category, regex("Historical", ignore_case = TRUE)),# His. data
+    str_detect(mode, regex("Cars", ignore_case = TRUE))# Passenger cars only
+  )
+
+# Step 3.2.4.1: Select Useful Columns
+ev_europe_fev <- ev_europe_fev %>%
+  select(region_country, year, value, unit)
+
+# Step 3.2.4.2: Clean Country Names (trim whitespace)
+ev_europe_fev$region_country <- str_trim(ev_europe_fev$region_country)
+
+#  Step 3.2.4.3: filter and summary
+filtered_fev_data <- ev_europe_fev |> 
+  group_by(region_country, year) |> 
+  select(region_country, year, value) 
+summary(filtered_fev_data)
+
+# Step 3.2.4.4: Pivot: Countries as rows, Years as columns
+fev_wide <- filtered_fev_data %>%
+  select(region_country, year, value) %>%
+  group_by(region_country, year) %>%
+  summarise(value = sum(value, na.rm = TRUE)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = year, values_from = value)
+
+#Step 3.2.4.5 :Count missing values in each column
+colSums(is.na(fev_wide))
+```
+```{r}
+# Step 3.2.5: PHEV for year 2015 - 2024 for differnet countires 
+ev_europe_phev <- ev_data %>%
+  filter (
+    region_country %in% europe_countries,          # Only European countries
+    str_detect(powertrain, regex("PHEV", ignore_case = TRUE)), # FCEV only
+    year >= 2015 & year <= 2024,                   # Year range
+    str_detect(parameter, regex("EV stock", ignore_case = TRUE)),# EV stock data only
+    str_detect(category, regex("Historical", ignore_case = TRUE)),# His. data
+    str_detect(mode, regex("Cars", ignore_case = TRUE))# Passenger cars only
+  )
+
+# Step 3.2.5.1: Select Useful Columns
+ev_europe_phev <- ev_europe_phev %>%
+  select(region_country, year, value, unit)
+
+# Step 3.2.5.2: Clean Country Names (trim whitespace)
+ev_europe_phev$region_country <- str_trim(ev_europe_phev$region_country)
+
+#  Step 3.2.5.3: filter and summary
+filtered_phev_data <- ev_europe_phev |> 
+  group_by(region_country, year) |> 
+  select(region_country, year, value) 
+summary(filtered_phev_data)
+
+# Step 3.2.5.4: Pivot: Countries as rows, Years as columns
+phev_wide <- filtered_phev_data %>%
+  select(region_country, year, value) %>%
+  group_by(region_country, year) %>%
+  summarise(value = sum(value, na.rm = TRUE)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = year, values_from = value)
+
+#Step 3.2.5.5 :Count missing values in each column
+colSums(is.na(phev_wide))
+```
+
+## 3.3 Storing cleaned data
+
+Describe where you saved the processed file and why.
+
+The all processed data has been stored in processed data set.
+
+(Insert code cells – write processed file)
+
+```{r}
+
+# Step 7: Save the Filtered Dataset
+path <- "data/processed/"
+#write_csv(filtered_ev_data,file.path(path, "EV_Europe_BEV_Stock_2015_2024.csv"))
+#write_csv(filtered_ec_data,file.path(path, "EC_Europe_BEV_Stock_2015_2024.csv"))
+#write_csv(filtered_fev_data,file.path(path,"EV_Europe_FEV_Stock_2015_2024.csv"))
+#write_csv(filtered_phev_data,file.path(path, "EV_Europe_PHEV_Stock_2015_2024.csv"))
+
+```
+
+# 4 Exploratory Data Analysis (EDA)
+## 4.1 Variable identification
+
+List variable types and their roles.
+
+The variable are either Character or double. There are 1 character type variables and 2 doubles type variable. and other data frames have 1 character type variables and 11 doubles type variable.
+- Value is the most important variable as it lists the no. of each parameter and would be used for our analysis. 
+- Data in value has categoriezed into for different year in other data from to form 3d vector rather than a 2d form for better visaulizaiton.
+- region_country can analysed categorically to check if all year has the data.
+
+(Insert code cells – variable listing)
+```{r}
+# identify variable types
+
+glimpse(filtered_ev_data)
+glimpse(ev_wide)
+glimpse(ec_wide)
+glimpse(fev_wide)
+glimpse(phev_wide)
+```
+
+## 4.2 Descriptive statistics
+
+Discuss central tendencies, dispersion, outliers.
+
+---- EV sales growth -----
+Across 2015–2024, the mean and median values both rise sharply, showing rapid market expansion.
+
+Mean: increases from ~12,000 (2015) to ~473,000 (2024), indicating average EV stocks per country grew nearly 40×.
+
+Median: follows a similar trend, from ~4,800 to ~300,000, showing that even mid-range adopters experienced massive growth.
+
+Mode: not applicable (all unique country values).
+
+Range: widens from ~59,000 – 97 (2015) to ~1.9 million – 18,000 (2024).
+
+Interquartile range (IQR): expands from a few thousand in early years to hundreds of thousands by 2024.
+
+Standard deviation (not shown, but implied): rises sharply — variability among countries is large, reflecting different national EV policies and infrastructure levels.
+
+Germany (1.9M in 2024), France (1.1M), and UK (1.4M) likely sit far above others.
+
+Statistically, these would be upper outliers if using the 1.5×IQR rule — but contextually, they represent legitimate leadership in EV adoption, not data errors.
+
+
+
+(Insert code cells – summarise numeric variables)
+```{r}
+# Step 4.2.1 : Summary
+summary(filtered_ev_data)
+summary(ev_wide)
+summary(ec_wide)
+summary(fev_wide)
+summary(phev_wide)
+
+```
+## 4.3 Numerical analysis
+
+Discuss histograms and boxplots
+
+-- EV growth -- Using 3 D  map
+
+- Germany (1.9M in 2024), France (1.1M), and UK (1.4M) evidently the leader in the market.
+- There is an uneven but accelerating electrification. 
+- After 2020, the growth has more rapid. 
+
+-- EV growth -- Using line scatter plot 
+
+Steady Early Growth (2015–2019): Most countries show slow increases in EV metrics, reflecting the initial adoption phase.
+
+Rapid Expansion (2020–2024): A sharp upward trend begins around 2020.
+
+Leading Countries:
+
+Germany shows the steepest rise, indicating major investments and market penetration.
+
+United Kingdom, France, and the Netherlands also display strong growth trajectories.
+
+-- EV growth -- Using Box plot
+
+The data reveal a polarized EV landscape in Europe, where a few leading nations account for most of the EV stock, while others are still in the early adoption phase.
+
+Germany and France have the highest median EV stock and widest spread, showing both strong adoption and high variability over time — reflecting their large markets and accelerating EV growth.
+
+Norway, Netherlands, and the United Kingdom also exhibit high medians, confirming their established EV infrastructures and mature markets.
+
+Smaller countries like Greece, Iceland, and Poland show very low medians and compressed ranges, indicating slower EV uptake.
+
+Outliers appear in countries such as Portugal, Denmark, and the UK, representing years of exceptionally high growth relative to previous periods.
+
+The overall dispersion suggests significant regional disparity: Western and Northern Europe dominate EV adoption, while Southern and Eastern regions lag behind.
+
+----- statistical studies-----
+Preliminary study show Strong Positive Correlation between number of electric vehicles (EV stock) and the number of charging station in germany and France. 
+
+The data points show a clear upward trend, indicating a strong positive relationship between the number of electric vehicles (EV stock) and the number of charging stations.
+
+
+There are other parameter than will be discussed more in more final report. This only thr shows the preliminary finding of ev growth in europe.
+
+```{r}
+
+# Step 4.3.1 : 3D Visualization using Plotly 
+library(plotly)
+
+#Aggregate data to reduce clutter (sum by year & country)
+ev_agg <- filtered_ev_data %>%
+  group_by(region_country, year) %>%
+  summarise(Total_Stock = sum(value, na.rm = TRUE)) %>%
+  ungroup()
+
+# --- 3D Scatter Plot ---
+plot_ly(
+  ev_agg,
+  x = ~year,                    # X-axis: Time
+  y = ~region_country,          # Y-axis: Country names
+  z = ~Total_Stock,             # Z-axis: EV stock
+  type = "bar",
+ 
+  color = ~Total_Stock,  # Color by EV stock intensity
+  colors = colorRamp(c("blue", "green", "yellow", "red"))
+) %>%
+  layout(
+    title = "3D Visualization of BEV Stock Growth in Europe (2015–2024)",
+    scene = list(
+      xaxis = list(title = "Year"),
+      yaxis = list(title = "Country"),
+      zaxis = list(title = "EV Stock (Units)")
+    )
+  )
+```
+
+```{r}
+# Step 4.3.2 : Line charts
+ev_long <- ev_wide %>%
+  pivot_longer(
+    cols = -region_country,
+    names_to = "year",
+    values_to = "value"
+  ) %>%
+  mutate(year = as.numeric(year))
+
+# --- Plot values as function of time ---
+ggplot(ev_long, aes(x = year, y = value/10000, color = region_country, group = region_country)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 0.5) +
+  scale_x_continuous(breaks = c(min(ev_long$year):max(ev_long$year))) +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "EV Metrics Over Time by Country",
+    x = "Year",
+    y = "Value",
+    color = "Country"
+  ) +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold", size = 16),
+    panel.grid.minor = element_blank()
+  )
+
+#------------#
+ggplot(ev_long, aes(x = year, y = value, color = region_country, group = region_country)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 0.5) +
+  scale_y_log10() +
+  scale_x_continuous(breaks = c(min(ev_long$year):max(ev_long$year))) +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "EV Growth Over Time by Country (Log Scale)",
+    subtitle = "Visualizing exponential growth trends in EV adoption",
+    x = "year",
+    y = "value (log scale)",
+    color = "region_country"
+  ) +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "grey90")
+  )
+
+#-------#
+ec_long <- ec_wide %>%
+  pivot_longer(
+    cols = -region_country,
+    names_to = "year",
+    values_to = "value"
+  ) %>%
+  mutate(year = as.numeric(year))
+
+ggplot(ec_long, aes(x = year, y = value, color = region_country, group = region_country)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 0.5) +
+  scale_x_continuous(breaks = c(min(ec_long$year):max(ec_long$year))) +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "ELectric Charging point Growth Over Time by Country",
+    x = "year",
+    y = "value",
+    color = "region_country"
+  ) +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "grey90")
+  )
+
+#------------#
+  fev_long <- fev_wide %>%
+  pivot_longer(
+    cols = -region_country,
+    names_to = "year",
+    values_to = "value"
+  ) %>%
+  mutate(year = as.numeric(year))
+
+ggplot(fev_long, aes(x = year, y = value, color = region_country, group = region_country)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 0.5) +
+  scale_x_continuous(breaks = c(min(fev_long$year):max(fev_long$year))) +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "FEV Growth Over Time by Country ",
+    x = "year",
+    y = "value ",
+    color = "region_country"
+  ) +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "grey90")
+  )
+
+#------------#
+  phev_long <- phev_wide %>%
+  pivot_longer(
+    cols = -region_country,
+    names_to = "year",
+    values_to = "value"
+  ) %>%
+  mutate(year = as.numeric(year))
+
+ggplot(phev_long, aes(x = year, y = value/10000, color = region_country, group = region_country)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 0.5) +
+  scale_x_continuous(breaks = c(min(phev_long$year):max(phev_long$year))) +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "PHEV Growth Over Time by Country",
+    x = "year",
+    y = "value ",
+    color = "region_country"
+  ) +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "grey90")
+  )
+
+```
+
+```{r}
+# Step 4.3.3 : Box plot using ggplot
+boxplot(
+  value/1000 ~ region_country,
+  data = ev_long,
+  main = "EV Stock in different  by Region",
+  xlab = "region_country", ylab = "value(in 1k)",
+  las = 2  # rotate x labels if long
+)
+boxplot(
+  value/1000 ~ region_country,
+  data = ec_long,
+  main = "Electric charging points in different  by Region",
+  xlab = "region_country", ylab = "value(in 1k)",
+  las = 2  # rotate x labels if long
+)
+boxplot(
+  value/1000 ~ region_country,
+  data = fev_long,
+  main = "FEV Stock in different  by Region",
+  xlab = "region_country", ylab = "value(in 1k)",
+  las = 2  # rotate x labels if long
+)
+boxplot(
+  value/1000 ~ region_country,
+  data = phev_long,
+  main = "PHEV Stock in different  by Region",
+  xlab = "region_country", ylab = "value(in 1k)",
+  las = 2  # rotate x labels if long
+)
+```
+## 4.4 Categorical analysis
+
+Discuss frequency distributions or group counts.
+
+(Insert code cells – counts or plots)
+
+```{r}
+# Step 4.4 : categorical analysis
+
+# Bar plot: counts per continent
+continent_counts <- table(ev_long$region_country)
+
+barplot(
+  continent_counts,
+  main = "Number of Records per Continent",
+  xlab = "Contury", ylab = "Count of Rows",
+  col = "lightblue",
+  las = 2  # rotate x labels
+)
+continent_counts1 <- table(ec_long$region_country)
+
+barplot(
+  continent_counts1,
+  main = "Number of Records per Continent",
+  xlab = "Contury", ylab = "Count of Rows",
+  col = "lightblue",
+  las = 2  # rotate x labels
+)
+
+continent_counts2 <- table(fev_long$region_country)
+barplot(
+  continent_counts1,
+  main = "Number of Records per Continent",
+  xlab = "Contury", ylab = "Count of Rows",
+  col = "lightblue",
+  las = 2  # rotate x labels
+)
+
+continent_counts3 <- table(phev_long$region_country)
+barplot(
+  continent_counts2,
+  main = "Number of Records per Continent",
+  xlab = "Contury", ylab = "Count of Rows",
+  col = "lightblue",
+  las = 2  # rotate x labels
+)
+```
+```{r}
+# step 4.3.4 : Statistical analysis
+top_5 <- c("Germany","France", "United Kingdom")
+scatter_dat1 <- ev_long %>%
+  filter (region_country == "Germany")%>%
+  select(region_country, year, value) %>%
+  arrange(desc(year))
+
+scatter_dat2 <- ec_long %>%
+  filter(region_country == "Germany") %>%
+  select(region_country, year, value) %>%
+  arrange(desc(year))
+
+germany_data <- merge(scatter_dat1, scatter_dat2, by=c("year","region_country"))
+   
+
+# Scatter Plot: EV stock vs Charging Stations 
+
+ggplot(germany_data, aes(x = value.x/1000, y = value.y/1000)) +
+  geom_point(aes(), size = 3,color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, color = "black", linetype = "dashed") +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "EV Stock vs. Charging Infrastructure in Germany (2015–2024)",
+    subtitle = "Assessing the relationship between vehicle adoption and charging expansion",
+    x = "EV Stock (per 1k Units)",
+    y = "Charging Stations (per 1k Units)",
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    legend.position = "right"
+  )
+#-----
+scatter_dat3 <- ev_long %>%
+  filter (region_country == "France")%>%
+  select(region_country, year, value) %>%
+  arrange(desc(year))
+
+scatter_dat4 <- ec_long %>%
+  filter(region_country == "France") %>%
+  select(region_country, year, value) %>%
+  arrange (desc(year))
+
+France_data <- merge(scatter_dat3, scatter_dat4, by=c("year","region_country"))
+   
+
+# Scatter Plot: EV stock vs Charging Stations 
+
+ggplot(France_data, aes(x = value.x/1000, y = value.y/1000)) +
+  geom_point(aes(), size = 3,color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, color = "black", linetype = "dashed") +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "EV Stock vs. Charging Infrastructure in France (2015–2024)",
+    subtitle = "Assessing the relationship between vehicle adoption and charging expansion",
+    x = "EV Stock (per 1k Units)",
+    y = "Charging Stations (per 1k Units)",
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    legend.position = "right"
+  )
+```
+## 4.5 Interpretation
+
+Write short commentary linking patterns to your project context.
+
+The general overall commentary form the data is that, the EV Growth is widespread which is not just a few countries — meaning EV adoption is accelerating across the region.EV adoption became more unequal across Europe over time — early adopters (e.g., Germany, France, Netherlands) surged ahead, while others lagged. Outliers correspond to leaders in EV adoption, not anomalies. They show where charging infrastructure are strongest. The data reflect a clear acceleration in EV adoption across Europe post-2020, with Germany leading the transformation, highlighting the widening gap between high- and low-adoption countries in the EU EV market transition. The overall dispersion suggests significant regional disparity: Western and Northern Europe dominate EV adoption, while Southern and Eastern regions lag behind.
+
+In case of Phev nd FCV, The graph highlights diverging adoption speeds, uptake is widespread, a few leading countries drive most of the regional growth, might be because of the  policy effectiveness and market maturity differences within Europe.
+
+In terms of infrastructure, charging stations, Western European countries (Netherlands, France, Germany, UK) are leading in terms of EV charging infrastructure.Nordic countries like Norway and Sweden show decent deployment but not as high in raw numbers—possibly due to smaller populations.
+Southern and Eastern Europe (Greece, Poland, Iceland) lag behind, likely reflecting slower adoption or smaller urban infrastructure.
+
+Preliminary study show Strong Positive Correlation between number of electric vehicles (EV stock) and the number of charging station in Germany and France but has to extended to see other countries.The data points show a clear upward trend, indicating a strong positive relationship between the number of electric vehicles (EV stock) and the number of charging stations. this prove our H2 hypothesis :  H2 Greater density of public charging stations leads to higher adoption.
+
+# 5 Documentation and Reflection
+
+Capture reasoning, challenges, and decisions.
+
+The learning from this week activity is as follows,
+Initial Date and research
+- Data has been pushed to the server and been read from the r module
+- Hypothesis development using literature.
+- extracig data from source 
+
+Learn lot of new data transformation techiques,
+- pivot wide - to make it  useful analysis 
+- filtering and groupin 
+- str detect function  - to detect various text for filtering
+- checks for missing data 
+- check for duplication
+- Format check in year, countries and value 
+
+Data visualizations
+- 3d plot - for 3d data vislization
+- line plot  
+  - To manupilate the legends and axis 
+- box plots - usin ggplot
+- categorical analysis - for char data to check no of entries for all countries 
+- Statistical correlation - linear regression betweeen variable (to be studided more)
+
+
+Challenges and decisions :
+
+Biggest challenge is connection between R and github.
+The server is not working from friday and was to able to push or pull the data i had in r server.
+
+Initial Date and research
+- Finding data for the entire euopre was a challenge
+- we have other paramter like population, income levels and fuel prices and all are from different data sets. So per your suggestion, we have started with one data varibel of charging point deployment and extend to other.
+
+Learn lot of new data transformation techiques 
+- Using new techiques to filter data was not challenging, without knowin the name but chat gpt was helpful in tellin us the required functions.
+- Data validation is has to be done. Need to form rules for each data set.
+
+Data visualizations
+
+- had to learnt all tthe data visualization techniques, to study in differnent way a single variable sto gt new insights
+- 3-d visualization was a challenge, because of the complexity of the data , ended up using colour graph for 3rd dimension.
+- Axis manupilation was a challenge to standardize for each graph
+
+## 5.1 What assumptions did you make?
+Assumption 1: Cars are only contubuting factor for ev growth.
+Assumption 2: BEV is more singnifact than FCEV and PHEV from the data
+Assumption 3 : Data from 2015 to 2024 is only considered for study as it show a stronger growth in most of the countries
+Assumption 4 : PRojection data has not been taken into consideration as it is projection and a actual data set
+Assumption 5 : Fast charging and slow charging station has been combined and no corelation between found for those separtely.
+
+## 5.2 What was easy or hard?in
+Easy : 
+- Data extraction from website to R
+- Data transformation through filtering techquies 
+- Stiastical anyalsis
+- Writing data to different folders
+
+Hard :
+Biggest challenge is connection between R and github.
+The server is not working from friday and was to able to push or pull the data i had in r server.
+
+- 3d Data visalization
+- Pivoting
+- Graph axis - manipulations
+
+## 5.3 What would you do differently next time?
+
+- Has to set up R in my system and link it to the github.
+- Analysis of less data, and focus on reflections 
+
+# 6 Good Practice Reminders
+
+Checklist and reproducibility notes.
+
+* Comments in code - yes , done
+* Relative paths - done and storted in aprprorate paths 
+* Push and pull discipline. - Not able to do it , from my system.
+* Consistent naming conventions - yes, as per Euro stat convection
+
+# 7 Group Notes and Variations
+
+Describe context-specific adaptations or creative extensions.
+
+Data visualizations
+- 3-d visualization was a creative extensions, because of the complexity of the data , ended up using color graph for 3rd dimension.
+
+- Box Plot to study the showing both strong adoption and high variability over time.
+
+Next steps:
+- using statistical analysis, found relation between the two variables and found to be good correlation with linear. 
+
+# 8 Final Checkpoint Before Submission
+
+Tick items off to ensure readiness.
+
+* Dataset in /data/raw/.  ok
+* Cleaned dataset in /data/processed/ ok
+* HTML output in /outputs/ ok
+* Reflection written ok
+* Changes committed and pushed NO
+

@@ -1,0 +1,286 @@
+
+---
+title: "Week 7 – Visualisation & Storytelling"
+author: "Your Name"
+format:
+  html:
+    toc-depth: 2
+    code-fold: false
+    code-tools: false
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+
+
+*(Individual Submission)*
+
+This file contains the required structure for your Week 7 submission.
+Replace all placeholder text with your own work.
+
+---
+
+# Dataset Used
+
+::: callout-important
+You are expected to use the same dataset that you used during previous weeks. However, you may switch to another dataset if you can justify the switch. The new dataset (if switched to) must adhere to the same theme as before.
+:::
+
+Briefly describe the dataset you are visualising in the callout below (2–4 sentences). If switching datasets, complete the note below.
+
+::: callout-note
+### Dataset Description and Link
+
+
+:::
+
+::: callout-warning
+#### Dataset Switch Note (Only if applicable)
+
+* Why the original dataset could not be used responsibly
+* Why this new dataset fits the same theme
+* Source + license
+
+:::
+
+---
+
+## Improved Visuals from Previous Weeks
+
+*(Minimum 1, Maximum 3)*
+
+Please provide reference to the visuals you choose to improve from previous submissions with traceable and clear reference.
+
+::: {.callout-important collapse="true"}
+#### What “improvement” of a previous plot means (click to reveal)
+
+You may re-include 1 to 3 visuals from Week 2 or Week 4, but only if you improve them. In Week 7, “improvement” does not mean changing the data or re-running the same code. It means making the visualisation clearer, fairer, more accurate, or more purposeful.
+
+You may improve a plot by:
+
+- Fixing misleading or confusing scales
+(e.g., avoiding truncated axes, using appropriate limits).
+
+- Choosing a more suitable chart type
+(e.g., boxplot instead of bar chart for comparisons).
+
+- Improving aesthetics
+(cleaner themes, readable labels, consistent font sizes).
+
+- Clarifying colour choices
+(e.g., use of high-contrast or colour-blind-friendly palettes).
+
+- Adding informative titles or subtitles
+(summarising the key message).
+
+- Fixing labelling issues
+(rename ambiguous variables, use meaningful captions).
+
+- Removing clutter or chart junk
+(superfluous gridlines, 3D effects, unnecessary backgrounds).
+
+- Highlighting or annotating important features
+(e.g., a noticeable outlier, a trend, or a threshold).
+
+- Ensuring ethical clarity
+(e.g., appropriate grouping, non-stereotypical colour use).
+
+Your task is simply:
+
+Take a plot you created earlier and improve how clearly, honestly, and effectively it communicates its insight. You may keep the same chart type or change it to a better one — explain your choice in the bullet points that follow.
+
+:::
+---
+
+### 2.x Original Plot 1 (from Week 2 or 4)
+
+```{r}
+# Paste your original code here
+```
+
+> *Include a short reminder of what the original plot attempted to show.*
+
+---
+
+### 2.x Improved Plot 1 (Week 7)
+
+```{r}
+# Your improved plot code goes here
+```
+
+::: callout-note
+#### What I Improved and Why (3–6 bullet points):
+
+*
+*
+*
+*
+
+:::
+
+
+---
+
+**Include require text/code sections if you are adding more improved visuals from previous weeks.**
+
+---
+
+## New Week 7 Visuals
+
+You must produce **at least two new required visuals**:
+
+::: {.callout-important collapse="true"}
+
+#### Possible New Plot Types for Week 7 (Click to reveal)
+
+**(Choose the ones that fit your data best)**
+
+Depending on the nature of your dataset (categorical, numerical, time-based, grouped, or mixed), you may choose from the following plot types:
+
+**Relationship Visuals (for Required Plot A)**
+
+- Scatterplot
+- Scatterplot with regression line (lm)
+- Scatterplot with LOESS smoothing (with visible span parameter)
+- Scatterplot faceted by group
+- Bubble chart (if one variable can act as size)
+- Coloured scatterplot by category
+- Pairwise scatterplot
+- Hexbin or 2D density (for large datasets)
+
+**Distribution Comparison (for Required Plot B)**
+
+- Boxplot
+- Violin plot
+- Half-violin + boxplot hybrid
+- Density overlays
+- Ridge plot (if you have multiple groups)
+- Histogram comparison (but avoid overlapping clutter)
+- Dotplot / beeswarm (for small samples)
+
+**You may add one optional visual, provided it is meaningful for your dataset:**
+
+- Time series line chart
+- Time series with responsible smoothing
+- Grouped line chart
+- Bar chart of counts (not means)
+- Stacked or filled bar proportions
+- Tile/heatmap (if you have two categorical variables)
+- Treemap (for hierarchical counts)
+- Scatterplot with model diagnostics (residuals, fitted vs. observed)
+- Small multiples (facet grid)
+- Correlation heatmap (only if your dataset has ≥4 numeric variables)
+
+**If none of the above fits your dataset, you can choose another plot type — as long as:**
+
+- it is appropriate for what you want to show,
+- it is honest and clear,
+- you justify why it fits your data.
+
+:::
+
+**Note:** If required plots are not possible, please justify the alternatives and adjust the text and explanations accordingly.
+
+---
+
+### A. Relationship Visual (Required)
+
+> Examples: scatterplot + trend line, scatter by subgroup, faceted scatter.
+
+```{r}
+# Relationship plot code here
+```
+
+**Interpretation (2–4 sentences):**
+
+**Why this plot type is appropriate (1–2 sentences):**
+
+---
+
+### B. Distribution Comparison (Required)
+
+> Choose one: boxplot, violin, density comparison, faceting.
+
+```{r}
+# Distribution comparison code here
+```
+
+**Interpretation (2–4 sentences):**
+
+**Why this plot type is appropriate (1–2 sentences):**
+
+---
+
+### C. Trend / Group Comparison (Optional)
+
+```{r}
+# Optional extra plot
+```
+
+> Explain only if included.
+
+---
+
+## Narrative
+
+Write a short narrative connecting your visuals into a coherent data story.
+
+Example structure (keep it simple):
+
+* What question/theme the visuals address
+* What the relationship plot reveals
+* What the distribution plot clarifies
+* Optional: what trend/group plot adds
+* A closing insight
+
+---
+
+## Responsible Design Notes
+
+Provide brief bullet points about your design decisions:
+
+*
+*
+*
+*
+
+---
+
+## Responsible Use of AI (RVE Note)
+
+Complete one of the two options below.
+
+### **If you used AI:**
+
+Include the following block for each interaction.
+
+```
+- Tool/model used:
+- Prompt (short paraphrase is OK):
+- What the AI generated:
+- How you verified it:
+- What you changed:
+```
+
+### **If you did NOT use AI:**
+
+> *“I did not use AI for code or interpretation. All design decisions and commentary are my own.”*
+
+---
+
+## Appendix (Optional)
+
+You may place additional plots, tests, or reproducibility info here.
+
+```{r}
+# Optional extras
+# sessionInfo()
+```
+
+---
+
+# **END OF FILE**
+
+---
