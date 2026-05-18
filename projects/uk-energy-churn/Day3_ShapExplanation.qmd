@@ -47,7 +47,7 @@ rf_w_model <- ranger(
   Exited ~ Geography + Gender + Age + Tenure +
     NumOfProducts + IsActiveMember + CreditScore + Balance,
   data       = train,
-  ntree      = 300,    # number of trees
+  num.trees      = 300,    # number of trees
   mtry       = 3,      # no. of variables tried at each split (sqrt of 8 ≈ 3)
   probability    = TRUE,
   class.weights  = class_weights
@@ -66,10 +66,140 @@ rf_w_cm_03 <- confusionMatrix(rf_w_pred_03, test$Exited, positive = "1")
 rf_w_cm_03
 rf_w_cm_03$byClass[c("Recall", "Precision")]
 ```
-# 4. Compute SHAP values
-shap_vals <- treeshap(unified, X_explain)
+```{r}
+library(fastshap)
 
-# 5. Global importance / beeswarm
-plot_importance(shap_vals)            # bar plot: top global drivers
-plot_shap_summary(shap_vals)          # beeswarm-style summary if available
+# Define prediction wrapper for ranger probability model
+pred_wrapper <- function(model, newdata) {
+  predict(model, data = newdata)$predictions[, "1"]
+}
 
+# Explanation set
+X_explain <- test %>%
+  select(Geography, Gender, Age, Tenure,
+         NumOfProducts, IsActiveMember, CreditScore, Balance)
+
+# Compute SHAP values
+shap_values <- explain(
+  rf_w_model,
+  X = X_explain,
+  pred_wrapper = pred_wrapper,
+  nsim = 50
+)
+```
+
+```{r}
+library(ggplot2)
+
+# Convert to data frame
+shap_df <- as.data.frame(shap_values)
+
+# Global importance — mean absolute SHAP per feature
+shap_importance <- shap_df %>%
+  summarise(across(everything(), ~ mean(abs(.)))) %>%
+  pivot_longer(everything(), names_to = "Feature", values_to = "MeanAbsSHAP") %>%
+  arrange(desc(MeanAbsSHAP))
+
+# Sav# Create plots folder if it doesn't exist
+dir.create("/Users/stevemathew/stevemac-portfolio/projects/uk-energy-churn/plots", 
+           recursive = TRUE, showWarnings = FALSE)
+
+# Save plot
+png("/Users/stevemathew/stevemac-portfolio/projects/uk-energy-churn/plots/shap_importance.png", 
+    width = 1200, height = 800)
+
+ggplot(shap_importance, aes(x = reorder(Feature, MeanAbsSHAP), y = MeanAbsSHAP)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Global SHAP Feature Importance",
+    x = "Feature",
+    y = "Mean |SHAP value|"
+  ) +
+  theme_minimal()
+
+dev.off()
+```
+
+```{r}
+shap_long <- shap_df %>%
+  mutate(row_id = row_number()) %>%
+  pivot_longer(-row_id, names_to = "Feature", values_to = "SHAP")
+
+feature_long <- X_explain %>%
+  mutate(across(everything(), as.character)) %>%  # convert before row_id
+  mutate(row_id = row_number()) %>%               # add row_id after
+  pivot_longer(-row_id, names_to = "Feature", values_to = "Value")
+
+shap_long <- shap_long %>%
+  left_join(feature_long, by = c("row_id", "Feature")) %>%
+  mutate(Value = as.numeric(Value))
+
+png("/Users/stevemathew/stevemac-portfolio/projects/uk-energy-churn/plots/shap_beeswarm.png",
+    width = 1200, height = 800)
+
+ggplot(shap_long, aes(x = SHAP, y = reorder(Feature, abs(SHAP)), color = Value)) +
+  geom_jitter(height = 0.2, alpha = 0.4, size = 1.2) +
+  scale_color_gradient(low = "blue", high = "red", na.value = "grey50") +
+  labs(
+    title = "SHAP Value Distribution by Feature",
+    x = "SHAP Value",
+    y = "Feature",
+    color = "Feature Value"
+  ) +
+  theme_minimal()
+
+dev.off()
+```
+```{r}
+# Pick one churner and one stayer for explanation
+churner_idx <- which(test$Exited == "1")[1]
+stayer_idx <- which(test$Exited == "0")[1]
+
+# Churner waterfall
+churner_shap <- shap_df[churner_idx, ] %>%
+  pivot_longer(everything(), names_to = "Feature", values_to = "SHAP") %>%
+  arrange(desc(abs(SHAP)))
+
+png("/Users/stevemathew/stevemac-portfolio/projects/uk-energy-churn/plots/shap_waterfall_churner.png",
+    width = 1000, height = 700)
+
+ggplot(churner_shap, aes(x = reorder(Feature, SHAP), y = SHAP, 
+                          fill = SHAP > 0)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_manual(values = c("TRUE" = "#e74c3c", "FALSE" = "#3498db"),
+                    labels = c("TRUE" = "Increases churn risk", 
+                               "FALSE" = "Decreases churn risk")) +
+  labs(
+    title = "SHAP Explanation — Example Churner",
+    x = "Feature", y = "SHAP Value", fill = ""
+  ) +
+  theme_minimal()
+
+dev.off()
+```
+```{r}
+# Stayer waterfall
+stayer_shap <- shap_df[stayer_idx, ] %>%
+  pivot_longer(everything(), names_to = "Feature", values_to = "SHAP") %>%
+  arrange(desc(abs(SHAP)))
+
+png("/Users/stevemathew/stevemac-portfolio/projects/uk-energy-churn/plots/shap_waterfall_stayer.png",
+    width = 1000, height = 700)
+
+ggplot(stayer_shap, aes(x = reorder(Feature, SHAP), y = SHAP, 
+                         fill = SHAP > 0)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_manual(values = c("TRUE" = "#e74c3c", "FALSE" = "#3498db"),
+                    labels = c("TRUE" = "Increases churn risk", 
+                               "FALSE" = "Decreases churn risk")) +
+  labs(
+    title = "SHAP Explanation — Example Stayer",
+    x = "Feature", y = "SHAP Value", fill = ""
+  ) +
+  theme_minimal()
+
+dev.off()
+```

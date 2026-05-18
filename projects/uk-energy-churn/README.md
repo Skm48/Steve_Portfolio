@@ -50,10 +50,62 @@ The data is split into 80% train and 20% test. A logistic regression baseline is
 
 The **weighted Random Forest** with class weights 1:4 (stayers:churners), 300 trees and `mtry = 3` is selected as the Week 2 champion model because it reaches about 65% recall on churners with ~59% precision. 
 
-## Results
-- **Recall (churners)**: ~65% on the held‑out test set (champion model).  
-- **Business impact**: The model can flag about two‑thirds of likely churners, enabling targeted outreach instead of contacting the entire base. 
-- **SHAP (planned)**: SHAP analysis of the champion Random Forest to explain key churn drivers will be added in Week 3.
+## Model Explainability
+The Random Forest model was interpreted using three complementary XAI techniques to understand both global behaviour and individual predictions.
+
+### Permutation Importance
+Permutation Importance ranked features by the drop in model accuracy when each feature's values were randomly shuffled. 
+IsActiveMember, Age, and NumOfProducts emerged as the strongest global predictors, meaning the model relies heavily on these features to distinguish churners from stayers.
+![Permutation Importance](plots/shap_importance.png)
+
+### SHAP Beeswarm
+SHAP Beeswarm Plot extended this by showing not just importance but direction of effect across all customers. 
+Customers with fewer products and higher age consistently received positive SHAP values — pushing predictions toward churn — while active members and those with higher credit scores were systematically pushed away from churn risk.
+![SHAP Beeswarm](plots/shap_beeswarm.png)
+
+### SHAP Waterfall — Example Churner
+SHAP Waterfall Plots provided individual-level explanations. 
+For the example churner, NumOfProducts, Age, and Balance were the dominant drivers increasing churn probability, with IsActiveMember as the only significant counterforce. 
+![SHAP Waterfall Churner](plots/shap_waterfall_churner.png)
+
+### SHAP Waterfall — Example Stayer
+The example stayer showed the opposite pattern — IsActiveMember, Geography, and Balance strongly suppressed churn risk, outweighing the mild upward pressure from Age and CreditScore. Together, these plots confirm that membership status and product engagement are the most decisive factors in the model's predictions.
+![SHAP Waterfall Stayer](plots/shap_waterfall_stayer.png)
+
+---
+
+## Business Case — £ Impact
+
+Predicting churn is only valuable if it drives action. This section quantifies what the model is worth to a retention team.
+
+| Assumption | Value |
+|------------|-------|
+| Total customers | 10,000 |
+| Annual churn rate | ~20% (2,000 customers) |
+| Average revenue per customer | £800 / year |
+| Model recall | 0.65 → flags 1,300 true churners |
+| Model precision | 0.59 → 2,203 total customers flagged |
+| Retention outreach cost | £30 per customer contacted |
+| Retention success rate | 30% of contacted churners saved |
+
+**Without the model:** 2,000 customers lost per year → **£1.6M revenue at risk.**
+
+**With the model:**
+- 2,203 customers flagged for outreach → campaign cost: **£66,090**
+- 1,300 true churners correctly identified → 390 retained at 30% success rate
+- Revenue saved: **£312,000**
+- Net saving: **£245,910**
+- **ROI: 3.7× — for every £1 spent on outreach, £3.70 is recovered**
+
+> Scaled to a real UK energy portfolio of 500,000+ customers, this approach translates to **£12M+ in annual savings**.
+
+---
+
+## Key Takeaway
+
+Membership status and product engagement are the most decisive factors separating churners from stayers. A customer who is inactive and holds only one product is at significantly elevated risk — regardless of salary, tenure, or credit score.
+
+---
 
 ## Code & Demo
 
