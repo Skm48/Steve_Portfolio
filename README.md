@@ -6,8 +6,9 @@ Steve Mathew - Data Science Portfolio
 ## **🏆 FLAGSHIP PROJECT**
 | Project | Description | Status | Tech |
 |---------|-------------|--------|------|
-| [UK Energy Churn](projects/uk-energy-churn/) | **82% recall → £2M savings** | 🛠️ Building (Jan 10) | R, Streamlit, XGBoost, SHAP |
+| [Pneumonia Dectection](projects/uk-energy-churn/) | **Multi-architecture deep learning pipeline for binary chest X-ray classification (Normal vs. Pneumonia) + Achieved 78% recall** | 🚀 Featured | PyTorch + torchvision,pytorch-grad-cam,MLflow |
 | [Early Fraud Detection](projects/early-fraud-detection-ml/) | **ML models to predict fraud before repairs + Achieved 56% recall in fraud detection** | 🚀 Featured | Python, XGBoost, MLP, Scikit-learn |
+| [UK Energy Churn](projects/uk-energy-churn/) | **82% recall → £2M savings** | 🛠️ Building (Jan 10) | R, Streamlit, XGBoost, SHAP |
 
 ## **📊 MINI PROJECTS**
 | Project | Description | Status | Tech |
