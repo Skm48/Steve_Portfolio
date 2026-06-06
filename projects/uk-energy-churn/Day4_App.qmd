@@ -1,0 +1,215 @@
+---
+title: "Day4_App"
+format: html
+---
+
+```{r}
+library(shiny)
+library(randomForest)
+library(fastshap)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r read_data, message=FALSE, warning=FALSE}
+churn <- read_csv(here('data/raw', 'Churn_Modelling.csv'))
+head(churn)
+```
+
+```{r}
+set.seed(123)
+
+churn <- churn %>%
+  mutate(Exited = factor(Exited))   # 0 = stayed, 1 = churned
+
+train_index <- createDataPartition(churn$Exited, p = 0.8, list = FALSE)
+
+train <- churn[train_index, ]
+test  <- churn[-train_index, ]
+```
+
+
+## RG model with class weight to counter the imbalance 
+```{r}
+library(ranger)
+class_weights <- c("0" = 1, "1" = 4)   # churners 4x weight
+set.seed(123)
+
+rf_w_model <- ranger(
+  Exited ~ Geography + Gender + Age + Tenure +
+    NumOfProducts + IsActiveMember + CreditScore + Balance,
+  data       = train,
+  num.trees      = 300,    # number of trees
+  mtry       = 3,      # no. of variables tried at each split (sqrt of 8 ≈ 3)
+  probability    = TRUE,
+  class.weights  = class_weights
+)
+
+print(rf_w_model)
+
+dir.create("/Users/stevemathew/stevemac-portfolio/projects/uk-energy-churn/model", 
+           showWarnings = FALSE)
+
+saveRDS(rf_w_model, "/Users/stevemathew/stevemac-portfolio/projects/uk-energy-churn/model/rf_model.rds")
+```
+
+
+```{r}
+rf_w_probs <- predict(rf_w_model, data = test)$predictions[, "1"]
+
+rf_w_pred_03 <- ifelse(rf_w_probs >= 0.3, "1", "0")
+rf_w_pred_03 <- factor(rf_w_pred_03, levels = c("0", "1"))
+
+rf_w_cm_03 <- confusionMatrix(rf_w_pred_03, test$Exited, positive = "1")
+rf_w_cm_03
+rf_w_cm_03$byClass[c("Recall", "Precision")]
+```
+
+
+```{r}
+file.create("/Users/stevemathew/stevemac-portfolio/projects/uk-energy-churn/app.R")
+library(shiny)
+library(ranger)
+library(fastshap)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(scales)
+
+rf_model <- readRDS("/Users/stevemathew/stevemac-portfolio/projects/uk-energy-churn/model/rf_model.rds")
+
+# after loading rf_model, add this
+background <- train[sample(nrow(train), 100), 
+                    c("Geography", "Gender", "Age", "Tenure", 
+                      "NumOfProducts", "IsActiveMember", "CreditScore", "Balance")]
+
+pfun <- function(object, newdata) {
+  as.numeric(predict(object, data = newdata)$predictions[, "1"])
+}
+
+ui <- fluidPage(
+  titlePanel("Customer Churn Risk — UK Energy"),
+  sidebarLayout(
+    sidebarPanel(
+      h4("Customer Profile"),
+      selectInput("Geography", "Geography", choices = c("France", "Germany", "Spain")),
+      selectInput("Gender", "Gender", choices = c("Male", "Female")),
+      sliderInput("Age", "Age", min = 18, max = 92, value = 40),
+      sliderInput("Tenure", "Tenure (years)", min = 0, max = 10, value = 5),
+      sliderInput("NumOfProducts", "Number of Products", min = 1, max = 4, value = 1),
+      selectInput("IsActiveMember", "Active Member", choices = c("Yes" = 1, "No" = 0)),
+      sliderInput("CreditScore", "Credit Score", min = 300, max = 850, value = 600),
+      numericInput("Balance", "Balance (£)", value = 50000, min = 0, max = 250000),
+      actionButton("predict_btn", "Calculate Risk", class = "btn-primary")
+    ),
+    mainPanel(
+      h4("Churn Probability"),
+      uiOutput("risk_box"),
+      hr(),
+      h4("Why this prediction?"),
+      plotOutput("shap_plot", height = "400px")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+
+  result <- eventReactive(input$predict_btn, {
+    customer <- data.frame(
+      Geography      = input$Geography,
+      Gender         = input$Gender,
+      Age            = as.numeric(input$Age),
+      Tenure         = as.numeric(input$Tenure),
+      NumOfProducts  = as.numeric(input$NumOfProducts),
+      IsActiveMember = as.numeric(input$IsActiveMember),
+      CreditScore    = as.numeric(input$CreditScore),
+      Balance        = as.numeric(input$Balance)
+    )
+    prob <- predict(rf_model, data = customer)$predictions[, "1"]
+    shap_vals <- fastshap::explain(
+      rf_model,
+      X            = background,
+      newdata      = customer,
+      pred_wrapper = pfun,
+      nsim         = 100
+  )
+    list(prob = prob, shap = shap_vals)
+  })
+
+  output$risk_box <- renderUI({
+    req(result())
+    prob <- round(result()$prob * 100, 1)
+    color <- if (prob >= 60) "#c0392b" else if (prob >= 35) "#e67e22" else "#27ae60"
+    div(
+      style = paste0("font-size: 48px; font-weight: bold; color: ", color, "; padding: 20px 0;"),
+      paste0(prob, "%"),
+      div(style = "font-size: 16px; color: #666; font-weight: normal;",
+          if (prob >= 60) "High risk — consider immediate outreach"
+          else if (prob >= 35) "Medium risk — monitor closely"
+          else "Low risk — customer likely to stay")
+    )
+  })
+
+  output$shap_plot <- renderPlot({
+    req(result())
+    shap_df <- as.data.frame(result()$shap) %>%
+      pivot_longer(everything(), names_to = "Feature", values_to = "SHAP") %>%
+      arrange(desc(abs(SHAP)))
+
+    ggplot(shap_df, aes(x = reorder(Feature, SHAP), y = SHAP, fill = SHAP > 0)) +
+      geom_col(width = 0.6) +
+      coord_flip() +
+      scale_fill_manual(
+        values = c("TRUE" = "#e74c3c", "FALSE" = "#3498db"),
+        labels = c("TRUE" = "Increases churn risk", "FALSE" = "Decreases churn risk")
+      ) +
+      scale_y_continuous(labels = scales::comma) +
+      labs(x = "Feature", y = "SHAP Value", fill = "") +
+      theme_minimal(base_size = 14) +
+      theme(
+        panel.grid.major.y = element_blank(),
+        axis.text.y = element_text(size = 13),
+        legend.position = "bottom"
+      )
+  })
+}
+
+shinyApp(ui, server)
+```
+
+```{r}
+shinyApp
+library(fastshap)
+
+customer <- data.frame(
+  Geography      = "France",
+  Gender         = "Male",
+  Age            = 55,
+  Tenure         = 5,
+  NumOfProducts  = 1,
+  IsActiveMember = 0,
+  CreditScore    = 600,
+  Balance        = 50000
+)
+
+pfun <- function(object, newdata) {
+  as.numeric(predict(object, data = newdata)$predictions[, "1"])
+}
+
+# use a sample of training data as background
+background <- train[sample(nrow(train), 100), 
+                    c("Geography", "Gender", "Age", "Tenure", 
+                      "NumOfProducts", "IsActiveMember", "CreditScore", "Balance")]
+
+shap_vals <- fastshap::explain(
+  rf_model,
+  X            = background,
+  newdata      = customer,
+  pred_wrapper = pfun,
+  nsim         = 100
+)
+
+print(shap_vals)
+
+print(shap_vals)
+```
