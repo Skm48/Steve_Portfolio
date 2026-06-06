@@ -1,17 +1,55 @@
 # UK Energy Churn Prediction
-**Status**: 🛠️ Building (Dec 16) | **Tech**: R, Random Forest, SHAP (planned)
+**Status**: ✅ Complete | **Tech**: R · ranger · SHAP · Shiny
 
-## Problem
-A UK energy supplier is losing revenue due to customer churn (≈12% annual rate assumed for this project).
+---
 
-## Solution  
-A weighted Random Forest model predicts which customers are likely to churn, prioritising **high recall on churners with reasonable precision**.
+## Motivation
 
-## Customer Churn Prediction
+Customer churn is one of the most costly challenges facing energy providers. Acquiring a new customer costs significantly more than retaining an existing one, yet most suppliers have no systematic way of identifying who is at risk before they leave. In a competitive UK energy market — where customers can switch suppliers with minimal friction — the ability to predict and act on churn signals early is a genuine commercial advantage.
 
-I implement supervised learning models to predict if a customer will churn, using demographic, account and usage features.
+This project builds an end-to-end churn prediction pipeline that not only flags at-risk customers but explains *why* they are at risk, making the model actionable for retention teams rather than a black box.
 
+---
+
+## Objective
+
+- Predict which customers are likely to churn using demographic and account features
+- Prioritise **high recall on churners** — it is costlier to miss a churner than to unnecessarily contact a stayer
+- Explain model predictions at both global and individual customer level using XAI techniques
+- Quantify the business value of deploying the model through a £ impact analysis
+- Deliver an interactive Shiny dashboard for non-technical stakeholders
+
+---
+
+## Dataset
+
+The dataset is sourced from [Kaggle](https://www.kaggle.com/) and contains **10,000 customers** with the following features:
+
+| Feature | Description |
+|---------|-------------|
+| `CreditScore` | Customer credit score |
+| `Geography` | Country (France, Germany, Spain) |
+| `Gender` | Male / Female |
+| `Age` | Customer age |
+| `Tenure` | Years as a customer |
+| `Balance` | Account balance (£) |
+| `NumOfProducts` | Number of products held |
+| `IsActiveMember` | Whether the customer is actively engaged |
+| `Exited` | Target — 1 = churned, 0 = stayed |
+
+The dataset has a **~20% churn rate**, creating a class imbalance that is addressed through class weighting in the model.
+
+---
+
+## Data Pipeline
+
+```
+Raw CSV → Data Cleaning → Exploratory Analysis → Feature Selection
+    → Train/Test Split (80/20) → Weighted Random Forest → Evaluation
+        → SHAP Explainability → Shiny Dashboard
+```
 ### Analysis
+Supervised learning models are implemented to predict if a customer will churn, using demographic, account and usage features.
 
 **Churn and Tenure Relationship:** 
 ![Churn vs tenure](plots/churn_tenure.png)
@@ -107,7 +145,49 @@ Membership status and product engagement are the most decisive factors separatin
 
 ---
 
+## Shiny App — Interactive Churn Risk Tool
+
+A fully interactive Shiny dashboard allows retention teams to profile any customer and instantly see their churn probability alongside a live SHAP waterfall explaining the prediction.
+
+![Shiny App](plots/High_risk.png)
+![Shiny App](plots/Low_risk.png)
+---
+
+## Tech Stack
+
+| Tool | Purpose |
+|------|---------|
+| R | Data processing, modelling, visualisation |
+| `ranger` | Weighted Random Forest classifier |
+| `fastshap` | SHAP value computation |
+| `shiny` | Interactive churn risk dashboard |
+| `ggplot2` | All visualisations |
+| `dplyr / tidyr` | Data wrangling |
+
+---
+
+## How to Run
+
+1. Clone the repo:
+```bash
+git clone https://github.com/Skm48/Steve_Portfolio.git
+```
+
+2. Open `projects/uk-energy-churn/` in RStudio
+
+3. Install dependencies:
+```r
+install.packages(c("shiny", "ranger", "fastshap", "ggplot2", "dplyr", "tidyr", "scales"))
+```
+
+4. Run the app:
+```r
+shiny::runApp("projects/uk-energy-churn/app.R")
+```
+
+---
+
 ## Code & Demo
 
-**Full notebook**: [coming]  
-**Live demo** (Streamlit): [coming]
+**Full notebook**: `notebooks/churn_analysis.Rmd`  
+**Shiny app**: `app.R`
