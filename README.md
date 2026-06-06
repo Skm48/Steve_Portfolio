@@ -1,7 +1,10 @@
-# stevemac8391-lang.github.io
+# Portfolio
+This Portfolio is a compilation of all the Data Science and Data Analysis projects I have done for academic, self-learning and hobby purposes. This portfolio also contains my achievements, skills, and certificates.
+
+
 Description: Steve Mathew - Data Science Portfolio 
 Steve Mathew - Data Science Portfolio
-**Automotive Engineer (8yrs Simulation/Test) → Data Analyst/Scientist (MSc 2026)**
+** Data Analyst/Scientist & ML engineer (MSc 2026)**
 
 ## **🏆 FLAGSHIP PROJECT**
 | Project | Description | Status | Tech |
@@ -19,7 +22,5 @@ Steve Mathew - Data Science Portfolio
 | [Europe EV Sales](projects/europe-ev-sales/) | **Exploratory analysis of BEV adoption across 17 European countries — charging infrastructure correlation, regional LOESS trends, and distribution modelling.**|🚀 Featured|R, ggplot2, tidyverse, Quarto|
 
 **[PROJECT_LOG.md](PROJECT_LOG.md)** → Full 4-week Energy Churn development journey
-
-**Target Roles**: Energy Analyst (Aurora/Octopus) | Automotive DS (JLR/McLaren)
 
 [LinkedIn](---) | [stevemac8391-lang.github.io](https://stevemac8391-lang.github.io)
