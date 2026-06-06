@@ -150,10 +150,12 @@ Membership status and product engagement are the most decisive factors separatin
 A fully interactive Shiny dashboard allows retention teams to profile any customer and instantly see their churn probability alongside a live SHAP waterfall explaining the prediction.
 
 **Shiny App_High risk**
-![Shiny App_High risk](plots/High_risk.png)
+![Shiny App_High risk](plots/High_Risk.png)
 
 **Shiny App_Low risk**
-![Shiny App_Low risk](plots/Low_risk.png)
+![Shiny App_Low risk](plots/Low_Risk.png)
+
+
 ---
 
 ## Tech Stack
