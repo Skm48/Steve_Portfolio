@@ -3,7 +3,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
 
 Description: Steve Mathew - Data Science Portfolio 
 
-** Data Analyst/Scientist & ML engineer (MSc 2026)**
+**Data Analyst/Scientist & ML engineer (MSc 2026)**
 
 ## **🏆 FLAGSHIP PROJECT**
 | Project | Description | Status | Tech |
