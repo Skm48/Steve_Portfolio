@@ -1,7 +1,6 @@
 # Portfolio
 This Portfolio is a compilation of all the Data Science and Data Analysis projects I have done for academic, self-learning and hobby purposes. This portfolio also contains my achievements, skills, and certificates.
 
-
 Description: Steve Mathew - Data Science Portfolio 
 Steve Mathew - Data Science Portfolio
 ** Data Analyst/Scientist & ML engineer (MSc 2026)**
