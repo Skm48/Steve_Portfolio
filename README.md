@@ -24,10 +24,13 @@ Description: Steve Mathew - Data Science Portfolio
 
 ## **Core Competencies**
 Languages: Python, R, SQL, C++
+
 Methodologies: Machine Learning, Time Series Analysis, Deep Learning, NLP, Statistics,LLM integration, Deep Learning, Explainable AI
+
 Tools: Git, MS Excel, Tableau, 
 
 ## **Certificates**
+
 Tableau Essential Training By Linkedin
 
 [LinkedIn](---) | [stevemac8391-lang.github.io](https://stevemac8391-lang.github.io)
