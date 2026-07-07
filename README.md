@@ -28,7 +28,7 @@ Description: Steve Mathew - Data Science Portfolio
 
 **Machine Learning & Statistics:** Machine learning, deep learning, statistical modelling & hypothesis testing, time series analysis, regression analysis, class imbalance handling, dimensionality reduction
 
-**NLP & LLMs:** LLM integration (GPT-4o mini), prompt engineering, synthetic text generation, hallucination validation
+**NLP & LLMs:** Transformer-based NLP modelling (RoBERTa, FinBERT), LLM integration (GPT-4o mini), prompt engineering, synthetic text generation, hallucination validation
 
 **Explainable AI:** SHAP (tabular/fusion models), Grad-CAM (CNN visual explainability for image classification)
 
