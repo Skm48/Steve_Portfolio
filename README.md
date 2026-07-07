@@ -23,11 +23,20 @@ Description: Steve Mathew - Data Science Portfolio
 **[PROJECT_LOG.md](PROJECT_LOG.md)** → Full 4-week Energy Churn development journey
 
 ## **Core Competencies**
-Languages: Python, R, SQL, C++
 
-Methodologies: Machine Learning, Time Series Analysis, Deep Learning, NLP, Statistics,LLM integration, Deep Learning, Explainable AI
+**Languages:** Python, R, SQL
 
-Tools: Git, MS Excel, Tableau, 
+**Machine Learning & Statistics:** Machine learning, deep learning, statistical modelling & hypothesis testing, time series analysis, regression analysis, class imbalance handling, dimensionality reduction
+
+**NLP & LLMs:** LLM integration (GPT-4o mini), prompt engineering, synthetic text generation, hallucination validation
+
+**Explainable AI:** S**Explainable AI:** SHAP (tabular/fusion models), Grad-CAM (CNN visual explainability for image classification)
+
+**Visualisation & BI:** Tableau, Power BI, ggplot2
+
+**App Development & Deployment:** R Shiny (interactive web app for churn prediction & business reporting)
+
+**Tools & Workflow:** Git (collaborative branching workflows), MS Excel, MLflow
 
 ## **Certificates**
 
