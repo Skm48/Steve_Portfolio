@@ -22,12 +22,12 @@ Description: Steve Mathew - Data Science Portfolio
 
 **[PROJECT_LOG.md](PROJECT_LOG.md)** → Full 4-week Energy Churn development journey
 
-**Core Competencies**
+## **Core Competencies**
 Languages: Python, R, SQL, C++
 Methodologies: Machine Learning, Time Series Analysis, Deep Learning, NLP, Statistics,LLM integration, Deep Learning, Explainable AI
 Tools: Git, MS Excel, Tableau, 
 
-Certificates
+## **Certificates**
 Tableau Essential Training By Linkedin
 
 [LinkedIn](---) | [stevemac8391-lang.github.io](https://stevemac8391-lang.github.io)
