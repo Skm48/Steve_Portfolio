@@ -30,7 +30,7 @@ Description: Steve Mathew - Data Science Portfolio
 
 **NLP & LLMs:** LLM integration (GPT-4o mini), prompt engineering, synthetic text generation, hallucination validation
 
-**Explainable AI:** S**Explainable AI:** SHAP (tabular/fusion models), Grad-CAM (CNN visual explainability for image classification)
+**Explainable AI:** SHAP (tabular/fusion models), Grad-CAM (CNN visual explainability for image classification)
 
 **Visualisation & BI:** Tableau, Power BI, ggplot2
 
